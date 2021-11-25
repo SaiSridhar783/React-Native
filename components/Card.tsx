@@ -2,15 +2,12 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 
 interface CardProps {
-	children: React.ReactNode;
-	style: object;
+	style?: object;
 }
 
-function Card(props: CardProps) {
-	return (
-		<View style={{ ...styles.card, ...props.style }}>{props.children}</View>
-	);
-}
+const Card: React.FC<CardProps> = ({ children, style }) => {
+	return <View style={{ ...styles.card, ...style }}>{children}</View>;
+};
 
 const styles = StyleSheet.create({
 	card: {
