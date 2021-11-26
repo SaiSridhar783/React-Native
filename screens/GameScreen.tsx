@@ -73,10 +73,10 @@ function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
 			<NumberContainer>{currentGuess}</NumberContainer>
 			<Card style={styles.buttonContainer}>
 				<MainButton onPress={() => nextGuessHandler("LOWER")}>
-					<AntDesign name="minuscircleo" size={24} color="white" />
+					<AntDesign name="minuscircle" size={24} color="white" />
 				</MainButton>
 				<MainButton onPress={() => nextGuessHandler("HIGHER")}>
-					<AntDesign name="pluscircleo" size={24} color="white" />
+					<AntDesign name="pluscircle" size={24} color="white" />
 				</MainButton>
 			</Card>
 		</View>
