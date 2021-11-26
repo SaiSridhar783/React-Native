@@ -1,8 +1,7 @@
 import React from "react";
-import { Button, Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import BodyText from "../components/BodyText";
 import MainButton from "../components/MainButton";
-import TitleText from "../components/TitleText";
 import Colors from "../constants/colors";
 
 interface GameOverScreenProps {
@@ -14,7 +13,6 @@ interface GameOverScreenProps {
 function GameOverScreen(props: GameOverScreenProps) {
 	return (
 		<View style={styles.screen}>
-			<TitleText>Game Over!</TitleText>
 			<View style={styles.imageContainer}>
 				<Image
 					//source={require("../assets/success.png")}

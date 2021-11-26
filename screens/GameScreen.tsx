@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 import Card from "../components/Card";
 import MainButton from "../components/MainButton";
 import NumberContainer from "../components/NumberContainer";
 import DefaultStyles from "../constants/default-styles";
+import BodyText from "../components/BodyText";
 
 const generateRandomBetween = (
 	min: number,
@@ -27,18 +28,24 @@ interface GameScreenProps {
 	onGameOver: (numOfRounds: number) => void;
 }
 
+const renderListItem = (value: number, numOfRound: number) => (
+	<View key={value} style={styles.listItem}>
+		<BodyText>#{numOfRound}</BodyText>
+		<BodyText>{value}</BodyText>
+	</View>
+);
+
 function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
-	const [currentGuess, setCurrentGuess] = React.useState(
-		generateRandomBetween(1, 100, userChoice)
-	);
-	const [rounds, setRounds] = React.useState(0);
+	const initialGuess = generateRandomBetween(1, 100, userChoice);
+	const [currentGuess, setCurrentGuess] = useState(initialGuess);
+	const [pastGuesses, setPastGuesses] = useState<number[]>([initialGuess]);
 
 	const currentLow = React.useRef(1);
 	const currentHigh = React.useRef(100);
 
 	useEffect(() => {
 		if (currentGuess === userChoice) {
-			onGameOver(rounds);
+			onGameOver(pastGuesses.length);
 		}
 	}, [currentGuess, userChoice, onGameOver]);
 
@@ -56,7 +63,7 @@ function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
 		if (direction === "LOWER") {
 			currentHigh.current = currentGuess;
 		} else {
-			currentLow.current = currentGuess;
+			currentLow.current = currentGuess + 1;
 		}
 		const nextNumber = generateRandomBetween(
 			currentLow.current,
@@ -64,7 +71,8 @@ function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
 			currentGuess
 		);
 		setCurrentGuess(nextNumber);
-		setRounds((curRounds) => curRounds + 1);
+		//setRounds((curRounds) => curRounds + 1);
+		setPastGuesses((curPast) => [nextNumber, ...curPast]);
 	};
 
 	return (
@@ -79,6 +87,13 @@ function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
 					<AntDesign name="pluscircle" size={24} color="white" />
 				</MainButton>
 			</Card>
+			<View style={styles.listContainer}>
+				<ScrollView contentContainerStyle={styles.list}>
+					{pastGuesses.map((guess, index) =>
+						renderListItem(guess, pastGuesses.length - index)
+					)}
+				</ScrollView>
+			</View>
 		</View>
 	);
 }
@@ -96,6 +111,25 @@ const styles = StyleSheet.create({
 		maxWidth: "90%",
 		marginTop: 20,
 		paddingHorizontal: 15,
+	},
+	listContainer: {
+		flex: 1,
+		width: "80%",
+	},
+	list: {
+		flexGrow: 1,
+		alignItems: "center",
+		justifyContent: "flex-end",
+	},
+	listItem: {
+		borderColor: "#ccc",
+		borderWidth: 1,
+		padding: 15,
+		marginVertical: 10,
+		backgroundColor: "#fff",
+		flexDirection: "row",
+		justifyContent: "space-around",
+		width: "60%",
 	},
 });
 
