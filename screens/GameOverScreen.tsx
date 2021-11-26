@@ -15,7 +15,8 @@ function GameOverScreen(props: GameOverScreenProps) {
 			<TitleText>Game Over!</TitleText>
 			<View style={styles.imageContainer}>
 				<Image
-					source={require("../assets/success.png")}
+					//source={require("../assets/success.png")}
+					source={{uri: "https://c.tenor.com/DNrNoBnfz4cAAAAC/game-over.gif"}}
 					style={styles.image}
 					resizeMode="cover"
 				/>
@@ -38,11 +39,11 @@ const styles = StyleSheet.create({
 		height: "100%",
 	},
 	imageContainer: {
-		borderRadius: 150,
+		borderRadius: 160,
 		borderWidth: 3,
 		borderColor: "black",
-		width: 300,
-		height: 300,
+		width: 320,
+		height: 320,
 		overflow: "hidden",
 		marginVertical: 30,
 	},
