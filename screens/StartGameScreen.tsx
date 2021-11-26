@@ -11,6 +11,7 @@ import {
 import BodyText from "../components/BodyText";
 import Card from "../components/Card";
 import Input from "../components/Input";
+import MainButton from "../components/MainButton";
 import NumberContainer from "../components/NumberContainer";
 import TitleText from "../components/TitleText";
 import Colors from "../constants/colors";
@@ -63,10 +64,9 @@ function StartGameScreen(props: StartGameScreenProps) {
 			<Card style={styles.summaryContainer}>
 				<BodyText>You Selected </BodyText>
 				<NumberContainer>{selectedNumber}</NumberContainer>
-				<Button
-					title="START GAME"
-					onPress={() => props.onStartGame(selectedNumber)}
-				/>
+				<MainButton onPress={() => props.onStartGame(selectedNumber)}>
+					START GAME
+				</MainButton>
 			</Card>
 		);
 	}
@@ -80,7 +80,7 @@ function StartGameScreen(props: StartGameScreenProps) {
 			<View style={styles.screen}>
 				<TitleText style={styles.title}>Start a New Game!</TitleText>
 				<Card style={styles.inputContainer}>
-					<Text style={styles.text} >Select a Number</Text>
+					<Text style={styles.text}>Select a Number</Text>
 					<Input
 						style={styles.input}
 						blurOnSubmit
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		fontFamily: "open-sans",
-	}
+	},
 });
 
 export default StartGameScreen;

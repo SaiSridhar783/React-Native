@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Image, StyleSheet, Text, View } from "react-native";
 import BodyText from "../components/BodyText";
+import MainButton from "../components/MainButton";
 import TitleText from "../components/TitleText";
 import Colors from "../constants/colors";
 
@@ -17,7 +18,9 @@ function GameOverScreen(props: GameOverScreenProps) {
 			<View style={styles.imageContainer}>
 				<Image
 					//source={require("../assets/success.png")}
-					source={{uri: "https://c.tenor.com/DNrNoBnfz4cAAAAC/game-over.gif"}}
+					source={{
+						uri: "https://c.tenor.com/DNrNoBnfz4cAAAAC/game-over.gif",
+					}}
 					style={styles.image}
 					resizeMode="cover"
 				/>
@@ -30,7 +33,7 @@ function GameOverScreen(props: GameOverScreenProps) {
 					<Text style={styles.highlight}>{props.userNumber}</Text>
 				</BodyText>
 			</View>
-			<Button title="NEW GAME" onPress={props.onRestart} />
+			<MainButton onPress={props.onRestart}>NEW GAME</MainButton>
 		</View>
 	);
 }
