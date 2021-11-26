@@ -1,8 +1,14 @@
 import React from "react";
 import { StyleSheet, Text } from "react-native";
 
-const BodyText: React.FC = (props) => {
-	return <Text style={styles.text}>{props.children}</Text>;
+interface BodyTextProps {
+	style?: object;
+}
+
+const BodyText: React.FC<BodyTextProps> = (props) => {
+	return (
+		<Text style={{ ...styles.text, ...props.style }}>{props.children}</Text>
+	);
 };
 
 const styles = StyleSheet.create({
