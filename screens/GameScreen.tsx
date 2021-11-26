@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert, Button, StyleSheet, Text, View } from "react-native";
 import Card from "../components/Card";
 import NumberContainer from "../components/NumberContainer";
@@ -20,20 +20,28 @@ const generateRandomBetween = (
 
 interface GameScreenProps {
 	userChoice: number;
+	onGameOver: (numOfRounds: number) => void;
 }
 
-function GameScreen(props: GameScreenProps) {
+function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
 	const [currentGuess, setCurrentGuess] = React.useState(
-		generateRandomBetween(1, 100, props.userChoice)
+		generateRandomBetween(1, 100, userChoice)
 	);
+	const [rounds, setRounds] = React.useState(0);
 
 	const currentLow = React.useRef(1);
 	const currentHigh = React.useRef(100);
 
+	useEffect(() => {
+		if (currentGuess === userChoice) {
+			onGameOver(rounds);
+		}
+	}, [currentGuess, userChoice, onGameOver]);
+
 	const nextGuessHandler = (direction: string) => {
 		if (
-			(direction === "LOWER" && currentGuess < props.userChoice) ||
-			(direction === "HIGHER" && currentGuess > props.userChoice)
+			(direction === "LOWER" && currentGuess < userChoice) ||
+			(direction === "HIGHER" && currentGuess > userChoice)
 		) {
 			Alert.alert("Who you tryna kid?", "You know this ain't right...", [
 				{ text: "Sorry", style: "cancel" },
@@ -52,6 +60,7 @@ function GameScreen(props: GameScreenProps) {
 			currentGuess
 		);
 		setCurrentGuess(nextNumber);
+		setRounds((curRounds) => curRounds + 1);
 	};
 
 	return (
