@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
 	Alert,
+	Dimensions,
 	FlatList,
 	ScrollView,
 	StyleSheet,
@@ -124,12 +125,12 @@ const styles = StyleSheet.create({
 		justifyContent: "space-around",
 		width: 400,
 		maxWidth: "90%",
-		marginTop: 20,
+		marginTop: Dimensions.get("window").height > 600 ? 20 : 5,
 		paddingHorizontal: 15,
 	},
 	listContainer: {
 		flex: 1,
-		width: "60%",
+		width: Dimensions.get("window").width > 350 ? "60%" : "80%",
 	},
 	list: {
 		flexGrow: 1,
