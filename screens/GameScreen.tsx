@@ -49,9 +49,30 @@ function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
 	const [pastGuesses, setPastGuesses] = useState<string[]>([
 		initialGuess.toString(),
 	]);
+	const [availableDeviceWidth, setAvailableDeviceWidth] = useState(
+		Dimensions.get("window").width
+	);
+	const [availableDeviceHeight, setAvailableDeviceHeight] = useState(
+		Dimensions.get("window").height
+	);
 
 	const currentLow = React.useRef(1);
 	const currentHigh = React.useRef(100);
+
+	useEffect(() => {
+		const updateLayout = () => {
+			setAvailableDeviceWidth(Dimensions.get("window").width);
+			setAvailableDeviceHeight(Dimensions.get("window").height);
+		};
+
+		const subscription = Dimensions.addEventListener(
+			"change",
+			updateLayout
+		);
+		return () => {
+			subscription.remove();
+		};
+	}, []);
 
 	useEffect(() => {
 		if (currentGuess === userChoice) {
@@ -64,9 +85,11 @@ function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
 			(direction === "LOWER" && currentGuess < userChoice) ||
 			(direction === "HIGHER" && currentGuess > userChoice)
 		) {
-			Alert.alert("Who you tryna kid?", "You know this ain't right...", [
-				{ text: "Sorry", style: "cancel" },
-			]);
+			Alert.alert(
+				"Who you tryna fool?",
+				"You know this ain't the right choice...",
+				[{ text: "Sorry", style: "cancel" }]
+			);
 			return;
 		}
 
@@ -84,6 +107,39 @@ function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
 		//setRounds((curRounds) => curRounds + 1);
 		setPastGuesses((curPast) => [nextNumber.toString(), ...curPast]);
 	};
+
+	if (availableDeviceHeight < 500) {
+		return (
+			<View style={styles.screen}>
+				<Text style={DefaultStyles.title}>Opponent&apos;s Guess</Text>
+				<View style={styles.controls}>
+					<MainButton onPress={() => nextGuessHandler("LOWER")}>
+						<AntDesign name="minuscircle" size={24} color="white" />
+					</MainButton>
+					<NumberContainer>{currentGuess}</NumberContainer>
+					<MainButton onPress={() => nextGuessHandler("HIGHER")}>
+						<AntDesign name="pluscircle" size={24} color="white" />
+					</MainButton>
+				</View>
+				<View style={styles.listContainer}>
+					{/* <ScrollView contentContainerStyle={styles.list}>
+					{pastGuesses.map((guess, index) =>
+						renderListItem(guess, pastGuesses.length - index)
+					)}
+				</ScrollView> */}
+					<FlatList
+						keyExtractor={(item) => item}
+						data={pastGuesses}
+						renderItem={renderListItem.bind(
+							null,
+							pastGuesses.length
+						)}
+						contentContainerStyle={styles.list}
+					/>
+				</View>
+			</View>
+		);
+	}
 
 	return (
 		<View style={styles.screen}>
@@ -146,6 +202,12 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-around",
 		width: "100%",
+	},
+	controls: {
+		flexDirection: "row",
+		width: "80%",
+		justifyContent: "space-around",
+		alignItems: "center",
 	},
 });
 
