@@ -9,6 +9,7 @@ import {
 	View,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 import Card from "../components/Card";
 import MainButton from "../components/MainButton";
@@ -44,6 +45,11 @@ const renderListItem = (listLength: number, itemData: any) => (
 );
 
 function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
+	// ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+	/* ScreenOrientation.addOrientationChangeListener(() => {
+		console.log("Orientation changed");
+	}); */
+
 	const initialGuess = generateRandomBetween(1, 100, userChoice);
 	const [currentGuess, setCurrentGuess] = useState(initialGuess);
 	const [pastGuesses, setPastGuesses] = useState<string[]>([
