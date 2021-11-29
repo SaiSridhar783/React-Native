@@ -41,9 +41,7 @@ function StartGameScreen(props: StartGameScreenProps) {
 			updateLayout
 		);
 
-		return () => {
-			subscription?.remove();
-		};
+		return () => subscription?.remove();
 	}, []);
 
 	const numberInputHandler = (inputText: string) => {

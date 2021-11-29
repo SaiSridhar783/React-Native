@@ -75,9 +75,7 @@ function GameScreen({ userChoice, onGameOver }: GameScreenProps) {
 			"change",
 			updateLayout
 		);
-		return () => {
-			subscription.remove();
-		};
+		return () => subscription?.remove();
 	}, []);
 
 	useEffect(() => {
