@@ -15,6 +15,7 @@ import * as React from "react";
 import { ColorSchemeName, Pressable } from "react-native";
 
 import Colors from "../constants/Colors";
+import { MainHeaderStyle } from "../constants/Styles";
 import useColorScheme from "../hooks/useColorScheme";
 import CategoriesMealsScreen from "../screens/CategoriesMealsScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
@@ -57,15 +58,17 @@ function RootNavigator() {
 			<Stack.Screen
 				name="Categories"
 				component={CategoriesScreen}
+				options={Object.assign(MainHeaderStyle)}
 			/>
 			<Stack.Screen
 				name="CategoryMeals"
 				component={CategoriesMealsScreen}
+				options={{ ...Object.assign(MainHeaderStyle)}}
 			/>
 			<Stack.Screen
 				name="MealDetails"
 				component={MealDetailsScreen}
-				options={{ headerShown: false }}
+				options={Object.assign(MainHeaderStyle)}
 			/>
 			<Stack.Screen
 				name="NotFound"

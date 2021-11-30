@@ -1,17 +1,30 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
-import { RootStackParamList } from "../types";
+import { CATEGORIES } from "../data/dummy-data";
+import { RootStackScreenProps } from "../types";
 
 interface ICategoriesMealsScreenProps {}
 
 const CategoriesMealsScreen: React.FC<
-	ICategoriesMealsScreenProps &
-		NativeStackScreenProps<RootStackParamList, "CategoryMeals">
+	ICategoriesMealsScreenProps & RootStackScreenProps<"CategoryMeals">
 > = (props) => {
+	const categoryId = props.route.params?.params?.categoryId;
+
+	const selectedCategory = CATEGORIES.find(
+		(category) => category.id === categoryId
+	);
+
+	React.useEffect(() => {
+		props.navigation.setOptions({
+			title: selectedCategory?.title,
+		});
+		return () => {};
+	}, []);
+
 	return (
 		<View style={styles.screen}>
 			<Text>The Categories Meals Screen</Text>
+			<Text>{selectedCategory?.title}</Text>
 			<Button
 				title="Go to Meal Details"
 				onPress={() => {
