@@ -18,6 +18,7 @@ import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import CategoriesMealsScreen from "../screens/CategoriesMealsScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
+import MealDetailsScreen from "../screens/MealDetailsScreen";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import TabOneScreen from "../screens/TabOneScreen";
@@ -56,16 +57,14 @@ function RootNavigator() {
 			<Stack.Screen
 				name="Categories"
 				component={CategoriesScreen}
-				//options={{ headerShown: false }}
 			/>
 			<Stack.Screen
 				name="CategoryMeals"
 				component={CategoriesMealsScreen}
-				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
 				name="MealDetails"
-				component={CategoriesScreen}
+				component={MealDetailsScreen}
 				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
