@@ -18,6 +18,8 @@ export default function useCachedResources() {
 					"open-sans": require("../assets/fonts/OpenSans-Regular.ttf"),
 					"open-sans-bold": require("../assets/fonts/OpenSans-Bold.ttf"),
 					"space-mono": require("../assets/fonts/SpaceMono-Regular.ttf"),
+					nunito: require("../assets/fonts/Nunito-Regular.ttf"),
+					"nunito-bold": require("../assets/fonts/Nunito-Bold.ttf"),
 				});
 			} catch (e) {
 				// We might want to provide this error information to an error reporting service
