@@ -21,12 +21,17 @@ const CategoriesScreen: React.FC<
 			<TouchableNativeFeedback
 				onPress={() => {
 					props.navigation.navigate("CategoryMeals", {
-						params: { categoryId: itemData.item.id },
-						screen: "CategoryMeals",
+						categoryId: itemData.item.id,
+						screen: "TabTwo",
 					});
 				}}
 			>
-				<View style={styles.gridItem}>
+				<View
+					style={{
+						...styles.gridItem,
+						backgroundColor: itemData.item.color,
+					}}
+				>
 					<Text>{itemData.item.title}</Text>
 				</View>
 			</TouchableNativeFeedback>
@@ -53,7 +58,10 @@ const styles = StyleSheet.create({
 		margin: 15,
 		height: 150,
 		borderRadius: 10,
-		justifyContent: "center",
+		justifyContent: "flex-end",
+		alignItems: "flex-end",
+		elevation: 10,
+		padding: 15,
 	},
 });
 

@@ -8,7 +8,7 @@ interface ICategoriesMealsScreenProps {}
 const CategoriesMealsScreen: React.FC<
 	ICategoriesMealsScreenProps & RootStackScreenProps<"CategoryMeals">
 > = (props) => {
-	const categoryId = props.route.params?.params?.categoryId;
+	const categoryId = props.route.params?.categoryId;
 
 	const selectedCategory = CATEGORIES.find(
 		(category) => category.id === categoryId

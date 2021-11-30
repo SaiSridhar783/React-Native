@@ -54,22 +54,13 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
 	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="Categories"
-				component={CategoriesScreen}
-				options={Object.assign(MainHeaderStyle)}
-			/>
+		<Stack.Navigator screenOptions={Object.assign(MainHeaderStyle)}>
+			<Stack.Screen name="Categories" component={CategoriesScreen} />
 			<Stack.Screen
 				name="CategoryMeals"
 				component={CategoriesMealsScreen}
-				options={{ ...Object.assign(MainHeaderStyle)}}
 			/>
-			<Stack.Screen
-				name="MealDetails"
-				component={MealDetailsScreen}
-				options={Object.assign(MainHeaderStyle)}
-			/>
+			<Stack.Screen name="MealDetails" component={MealDetailsScreen} />
 			<Stack.Screen
 				name="NotFound"
 				component={NotFoundScreen}
