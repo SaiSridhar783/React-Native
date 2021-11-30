@@ -32,7 +32,9 @@ const CategoriesScreen: React.FC<
 						backgroundColor: itemData.item.color,
 					}}
 				>
-					<Text>{itemData.item.title}</Text>
+					<Text style={styles.titleText} numberOfLines={2}>
+						{itemData.item.title}
+					</Text>
 				</View>
 			</TouchableNativeFeedback>
 		);
@@ -62,6 +64,10 @@ const styles = StyleSheet.create({
 		alignItems: "flex-end",
 		elevation: 10,
 		padding: 15,
+	},
+	titleText: {
+		fontFamily: "nunito",
+		fontSize: 20,
 	},
 });
 
