@@ -20,6 +20,7 @@ export type RootStackParamList = {
 	Categories: NavigatorScreenParams<RootTabParamList> | undefined;
 	CategoryMeals: CategoryParamList & NavigatorScreenParams<RootTabParamList> | undefined;
 	MealDetails: MealsParamList & NavigatorScreenParams<RootTabParamList> | undefined;
+	Favourites: NavigatorScreenParams<RootTabParamList> | undefined;
 	Modal: undefined;
 	NotFound: undefined;
 };
@@ -29,7 +30,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 
 export type RootTabParamList = {
 	Meals: undefined;
-	Favourites: undefined;
+	FavouritesTab: undefined;
 };
 
 export type CategoryParamList = {

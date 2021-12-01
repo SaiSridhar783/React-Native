@@ -21,7 +21,6 @@ import CategoriesMealsScreen from "../screens/CategoriesMealsScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import FavouritesScreen from "../screens/FavouritesScreen";
 import MealDetailsScreen from "../screens/MealDetailsScreen";
-import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import {
 	RootStackParamList,
@@ -40,11 +39,12 @@ export default function Navigation({
 			linking={LinkingConfiguration}
 			theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
 		>
-			{Platform.OS === "android" ? (
+			{/* {Platform.OS === "android" ? (
 				<MaterialBottomTabNavigator />
 			) : (
 				<BottomTabNavigator />
-			)}
+			)} */}
+			<BottomTabNavigator />
 		</NavigationContainer>
 	);
 }
@@ -76,10 +76,21 @@ function RootNavigator() {
 				component={NotFoundScreen}
 				options={{ title: "Oops!" }}
 			/>
-			<MealsStack.Group screenOptions={{ presentation: "modal" }}>
+			{/* <MealsStack.Group screenOptions={{ presentation: "modal" }}>
 				<MealsStack.Screen name="Modal" component={ModalScreen} />
-			</MealsStack.Group>
+			</MealsStack.Group> */}
 		</MealsStack.Navigator>
+	);
+}
+
+const FavStack = createNativeStackNavigator<RootStackParamList>();
+
+function FavRootNavigator() {
+	return (
+		<FavStack.Navigator screenOptions={Object.assign(MainHeaderStyle)}>
+			<FavStack.Screen name="Favourites" component={FavouritesScreen} />
+			<FavStack.Screen name="MealDetails" component={MealDetailsScreen} />
+		</FavStack.Navigator>
 	);
 }
 
@@ -95,6 +106,9 @@ function BottomTabNavigator() {
 			initialRouteName="Meals"
 			screenOptions={{
 				tabBarActiveTintColor: Colors.accentColor,
+				tabBarStyle: {
+					backgroundColor: Colors.primaryColor,
+				},
 			}}
 		>
 			<BottomTab.Screen
@@ -108,12 +122,14 @@ function BottomTabNavigator() {
 				})}
 			/>
 			<BottomTab.Screen
-				name="Favourites"
-				component={FavouritesScreen}
+				name="FavouritesTab"
+				component={FavRootNavigator}
 				options={{
 					tabBarIcon: ({ color }) => (
 						<TabBarIcon name="star" color={color} />
 					),
+					headerShown: false,
+					title: "Favourites!",
 				}}
 			/>
 		</BottomTab.Navigator>
@@ -153,13 +169,14 @@ function MaterialBottomTabNavigator() {
 				}}
 			/>
 			<MaterialBottomTab.Screen
-				name="Favourites"
-				component={FavouritesScreen}
+				name="FavouritesTab"
+				component={FavRootNavigator}
 				options={{
 					tabBarIcon: ({ color }) => (
 						<TabBarIcon name="star" color={color} />
 					),
 					tabBarColor: Colors.accentColor,
+					title: "Favourites",
 				}}
 			/>
 		</MaterialBottomTab.Navigator>

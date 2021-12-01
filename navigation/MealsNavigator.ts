@@ -20,7 +20,7 @@ const linking: LinkingOptions<RootStackParamList> = {
 							TabOneScreen: "one",
 						},
 					},
-					Favourites: {
+					FavouritesTab: {
 						screens: {
 							TabTwoScreen: "two",
 						},

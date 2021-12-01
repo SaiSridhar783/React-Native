@@ -1,6 +1,6 @@
 import * as React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
 import MealItem from "../components/MealItem";
+import MealList from "../components/MealList";
 import { CATEGORIES, MEALS } from "../data/dummy-data";
 import { Meal } from "../models/meal";
 import { RootStackScreenProps } from "../types";
@@ -28,46 +28,7 @@ const CategoriesMealsScreen: React.FC<
 		(meal) => meal.categoryIds.indexOf(categoryId) >= 0
 	);
 
-	const renderMealItem = (itemData: { item: Meal }) => {
-		return (
-			<MealItem
-				title={itemData.item.title}
-				duration={itemData.item.duration}
-				complexity={itemData.item.complexity}
-				affordability={itemData.item.affordability}
-				image={itemData.item.imageUrl}
-				onSelectMeal={() => {
-					props.navigation.navigate("MealDetails", {
-						mealId: itemData.item.id,
-						screen: "Meals"
-					});
-				}}
-			/>
-		);
-	};
-
-	return (
-		<View style={styles.screen}>
-			<FlatList
-				style={styles.list}
-				data={displayMeals}
-				renderItem={renderMealItem}
-			/>
-		</View>
-	);
+	return <MealList listData={displayMeals} navigation={props.navigation} />;
 };
-
-const styles = StyleSheet.create({
-	screen: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-	},
-
-	list: {
-		flex: 1,
-		width: "95%",
-	},
-});
 
 export default CategoriesMealsScreen;
