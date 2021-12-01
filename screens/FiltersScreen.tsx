@@ -33,7 +33,7 @@ const FiltersScreen: React.FC<RootStackScreenProps<"Filters">> = (props) => {
 	const [isVegan, setIsVegan] = React.useState(false);
 	const [isVegetarian, setIsVegetarian] = React.useState(false);
 
-	const saveFilters = () => {
+	const saveFilters = React.useCallback(() => {
 		const appliedFilters = {
 			glutenFree: isGlutenFree,
 			lactoseFree: isLactoseFree,
@@ -41,11 +41,11 @@ const FiltersScreen: React.FC<RootStackScreenProps<"Filters">> = (props) => {
 			vegetarian: isVegetarian,
 		};
 		console.log(appliedFilters);
-	};
+	}, [isGlutenFree, isLactoseFree, isVegan, isVegetarian]);
 
-	/* React.useEffect(() => {
+	React.useEffect(() => {
 		saveFilters();
-	}, [saveFilters]); */
+	}, [saveFilters]);
 
 	React.useEffect(() => {
 		props.navigation.setOptions({
