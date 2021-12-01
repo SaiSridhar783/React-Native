@@ -22,7 +22,7 @@ const CategoriesScreen: React.FC<
 				onPress={() => {
 					props.navigation.navigate("CategoryMeals", {
 						categoryId: itemData.item.id,
-						screen: "TabTwo",
+						screen: "Meals",
 					});
 				}}
 			>

@@ -39,7 +39,7 @@ const CategoriesMealsScreen: React.FC<
 				onSelectMeal={() => {
 					props.navigation.navigate("MealDetails", {
 						mealId: itemData.item.id,
-						screen: "TabOne"
+						screen: "Meals"
 					});
 				}}
 			/>
