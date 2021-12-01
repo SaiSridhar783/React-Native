@@ -13,7 +13,7 @@ const DefaultText: React.FC<IDefaultTextProps> = (props) => {
 
 const styles = StyleSheet.create({
 	text: {
-		color: "#ccc",
+		color: "black",
 		fontFamily: "nunito",
 	},
 });

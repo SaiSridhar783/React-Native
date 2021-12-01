@@ -32,9 +32,9 @@ const MealItem: React.FC<IMealItemProps> = (props) => {
 					</ImageBackground>
 				</View>
 				<View style={{ ...styles.mealRow, ...styles.mealDetails }}>
-					<DefaultText>{props.duration}m</DefaultText>
-					<DefaultText>{props.complexity.toUpperCase()}</DefaultText>
-					<DefaultText>
+					<DefaultText style={{color: "#ccc"}}>{props.duration}m</DefaultText>
+					<DefaultText style={{color: "#ccc"}}>{props.complexity.toUpperCase()}</DefaultText>
+					<DefaultText style={{color: "#ccc"}}>
 						{props.affordability.toUpperCase()}
 					</DefaultText>
 				</View>
