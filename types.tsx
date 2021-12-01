@@ -19,7 +19,7 @@ declare global {
 export type RootStackParamList = {
 	Categories: NavigatorScreenParams<RootTabParamList> | undefined;
 	CategoryMeals: CategoryParamList & NavigatorScreenParams<RootTabParamList> | undefined;
-	MealDetails: NavigatorScreenParams<RootTabParamList> | undefined;
+	MealDetails: MealsParamList & NavigatorScreenParams<RootTabParamList> | undefined;
 	Modal: undefined;
 	NotFound: undefined;
 };
@@ -34,6 +34,10 @@ export type RootTabParamList = {
 
 export type CategoryParamList = {
 	categoryId: string | number;
+};
+
+export type MealsParamList = {
+	mealId: string | number;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> =

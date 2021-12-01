@@ -32,11 +32,16 @@ const CategoriesMealsScreen: React.FC<
 		return (
 			<MealItem
 				title={itemData.item.title}
-				onSelectMeal={() => {}}
 				duration={itemData.item.duration}
 				complexity={itemData.item.complexity}
 				affordability={itemData.item.affordability}
 				image={itemData.item.imageUrl}
+				onSelectMeal={() => {
+					props.navigation.navigate("MealDetails", {
+						mealId: itemData.item.id,
+						screen: "TabOne"
+					});
+				}}
 			/>
 		);
 	};
