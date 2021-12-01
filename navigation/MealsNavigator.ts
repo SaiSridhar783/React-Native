@@ -15,12 +15,12 @@ const linking: LinkingOptions<RootStackParamList> = {
 		screens: {
 			Categories: {
 				screens: {
-					TabOne: {
+					Meals: {
 						screens: {
 							TabOneScreen: "one",
 						},
 					},
-					TabTwo: {
+					Favourites: {
 						screens: {
 							TabTwoScreen: "two",
 						},

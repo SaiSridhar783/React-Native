@@ -5,6 +5,7 @@
  */
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import {
 	NavigationContainer,
 	DefaultTheme,
@@ -12,11 +13,10 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName } from "react-native";
+import { ColorSchemeName, Platform } from "react-native";
 
 import Colors from "../constants/Colors";
 import { MainHeaderStyle } from "../constants/Styles";
-import useColorScheme from "../hooks/useColorScheme";
 import CategoriesMealsScreen from "../screens/CategoriesMealsScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import FavouritesScreen from "../screens/FavouritesScreen";
@@ -40,7 +40,11 @@ export default function Navigation({
 			linking={LinkingConfiguration}
 			theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
 		>
-			<BottomTabNavigator />
+			{Platform.OS === "android" ? (
+				<MaterialBottomTabNavigator />
+			) : (
+				<BottomTabNavigator />
+			)}
 		</NavigationContainer>
 	);
 }
@@ -86,8 +90,6 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-	const colorScheme = useColorScheme();
-
 	return (
 		<BottomTab.Navigator
 			initialRouteName="Meals"
@@ -126,4 +128,40 @@ function TabBarIcon(props: {
 	color: string;
 }) {
 	return <Ionicons size={25} style={{ marginBottom: -3 }} {...props} />;
+}
+
+/**
+ * Material Bottom Tab Navigator
+ * For Android
+ */
+
+const MaterialBottomTab = createMaterialBottomTabNavigator<RootTabParamList>();
+
+function MaterialBottomTabNavigator() {
+	return (
+		<MaterialBottomTab.Navigator initialRouteName="Meals" shifting={true}>
+			<MaterialBottomTab.Screen
+				name="Meals"
+				component={RootNavigator}
+				options={({ navigation }: RootTabScreenProps<"Meals">) => {
+					return {
+						tabBarIcon: ({ color }) => (
+							<TabBarIcon name="restaurant" color={color} />
+						),
+						tabBarColor: Colors.primaryColor,
+					};
+				}}
+			/>
+			<MaterialBottomTab.Screen
+				name="Favourites"
+				component={FavouritesScreen}
+				options={{
+					tabBarIcon: ({ color }) => (
+						<TabBarIcon name="star" color={color} />
+					),
+					tabBarColor: Colors.accentColor,
+				}}
+			/>
+		</MaterialBottomTab.Navigator>
+	);
 }
