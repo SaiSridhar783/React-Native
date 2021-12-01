@@ -6,6 +6,7 @@ import {
 	TouchableNativeFeedback,
 	ImageBackground,
 } from "react-native";
+import DefaultText from "./DefaultText";
 
 interface IMealItemProps {
 	title: string;
@@ -31,9 +32,11 @@ const MealItem: React.FC<IMealItemProps> = (props) => {
 					</ImageBackground>
 				</View>
 				<View style={{ ...styles.mealRow, ...styles.mealDetails }}>
-					<Text style={{color: "#ccc"}}>{props.duration}m</Text>
-					<Text style={{color: "#ccc"}}>{props.complexity.toUpperCase()}</Text>
-					<Text style={{color: "#ccc"}}>{props.affordability.toUpperCase()}</Text>
+					<DefaultText>{props.duration}m</DefaultText>
+					<DefaultText>{props.complexity.toUpperCase()}</DefaultText>
+					<DefaultText>
+						{props.affordability.toUpperCase()}
+					</DefaultText>
 				</View>
 			</View>
 		</TouchableNativeFeedback>

@@ -14,7 +14,7 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName, Platform } from "react-native";
+import { ColorSchemeName, Platform, Text } from "react-native";
 
 import Colors from "../constants/Colors";
 import { MainHeaderStyle } from "../constants/Styles";
@@ -111,6 +111,9 @@ function BottomTabNavigator() {
 				tabBarStyle: {
 					backgroundColor: Colors.primaryColor,
 				},
+				tabBarLabelStyle: {
+					fontFamily: "open-sans-bold",
+				},
 			}}
 		>
 			<BottomTab.Screen
@@ -161,12 +164,18 @@ function MaterialBottomTabNavigator() {
 			<MaterialBottomTab.Screen
 				name="Meals"
 				component={RootNavigator}
+				// @ts-ignore
 				options={({ navigation }: RootTabScreenProps<"Meals">) => {
 					return {
 						tabBarIcon: ({ color }) => (
 							<TabBarIcon name="restaurant" color={color} />
 						),
 						tabBarColor: Colors.primaryColor,
+						tabBarLabel: (
+							<Text style={{ fontFamily: "open-sans-bold" }}>
+								Meals
+							</Text>
+						),
 					};
 				}}
 			/>
@@ -200,7 +209,7 @@ function DrawerNavigator() {
 				...Object.assign(MainHeaderStyle),
 				drawerActiveTintColor: Colors.accentColor,
 				drawerLabelStyle: {
-					fontFamily: "nunito-bold",
+					fontFamily: "open-sans-bold",
 				},
 			}}
 		>

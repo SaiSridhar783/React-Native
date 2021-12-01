@@ -3,6 +3,6 @@ import Colors from "./Colors";
 export const MainHeaderStyle = {
 	headerStyle: { backgroundColor: Colors.primaryColor },
 	headerTintColor: "#fff",
-	headerTitleStyle: { fontFamily: "open-sans-bold", fontSize: 21 },
+	headerTitleStyle: { fontFamily: "nunito-bold", fontSize: 23 },
 	headerTitleAlign: "center",
 };
