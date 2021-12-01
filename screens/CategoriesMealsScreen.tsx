@@ -1,8 +1,7 @@
 import * as React from "react";
-import MealItem from "../components/MealItem";
 import MealList from "../components/MealList";
-import { CATEGORIES, MEALS } from "../data/dummy-data";
-import { Meal } from "../models/meal";
+import { CATEGORIES } from "../data/dummy-data";
+import { useReduxSelector } from "../store/store";
 import { RootStackScreenProps } from "../types";
 
 interface ICategoriesMealsScreenProps {}
@@ -23,7 +22,8 @@ const CategoriesMealsScreen: React.FC<
 		return () => {};
 	}, []);
 
-	const displayMeals = MEALS.filter(
+	const mealState = useReduxSelector((state) => state.meal);
+	const displayMeals = mealState.meals.filter(
 		//@ts-ignore
 		(meal) => meal.categoryIds.indexOf(categoryId) >= 0
 	);
