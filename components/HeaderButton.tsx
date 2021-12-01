@@ -4,7 +4,6 @@ import {
 	HeaderButton,
 	HeaderButtonProps,
 } from "react-navigation-header-buttons";
-import Colors from "../constants/Colors";
 
 interface CustomIHeaderButtonProps extends HeaderButtonProps {
 	title: string;
@@ -13,10 +12,10 @@ interface CustomIHeaderButtonProps extends HeaderButtonProps {
 const CustomHeaderButton: React.FC<CustomIHeaderButtonProps> = (props) => {
 	return (
 		<HeaderButton
+			color="orange"
 			{...props}
 			IconComponent={FontAwesome}
 			iconSize={23}
-			color="orange"
 		/>
 	);
 };

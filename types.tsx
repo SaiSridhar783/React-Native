@@ -21,6 +21,8 @@ export type RootStackParamList = {
 	CategoryMeals: CategoryParamList & NavigatorScreenParams<RootTabParamList> | undefined;
 	MealDetails: MealsParamList & NavigatorScreenParams<RootTabParamList> | undefined;
 	Favourites: NavigatorScreenParams<RootTabParamList> | undefined;
+	Filters: NavigatorScreenParams<RootTabParamList> | undefined;
+	MealsFavs: undefined;
 	Modal: undefined;
 	NotFound: undefined;
 };

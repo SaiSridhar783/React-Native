@@ -1,4 +1,5 @@
-import React from "react";
+import 'react-native-gesture-handler';
+import * as React from "react";
 import { enableScreens } from "react-native-screens";
 //import { SafeAreaProvider } from "react-native-safe-area-context";
 

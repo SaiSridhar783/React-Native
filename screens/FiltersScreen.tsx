@@ -1,9 +1,12 @@
 import * as React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { RootStackScreenProps } from "../types";
 
 interface IFiltersScreenProps {}
 
-const FiltersScreen: React.FC<IFiltersScreenProps> = (props) => {
+const FiltersScreen: React.FC<
+	IFiltersScreenProps & RootStackScreenProps<"Filters">
+> = (props) => {
 	return (
 		<View style={styles.screen}>
 			<Text>The Filters Screen</Text>

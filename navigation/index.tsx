@@ -5,6 +5,7 @@
  */
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import {
 	NavigationContainer,
@@ -20,6 +21,7 @@ import { MainHeaderStyle } from "../constants/Styles";
 import CategoriesMealsScreen from "../screens/CategoriesMealsScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import FavouritesScreen from "../screens/FavouritesScreen";
+import FiltersScreen from "../screens/FiltersScreen";
 import MealDetailsScreen from "../screens/MealDetailsScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import {
@@ -44,7 +46,7 @@ export default function Navigation({
 			) : (
 				<BottomTabNavigator />
 			)} */}
-			<BottomTabNavigator />
+			<DrawerNavigator />
 		</NavigationContainer>
 	);
 }
@@ -180,5 +182,38 @@ function MaterialBottomTabNavigator() {
 				}}
 			/>
 		</MaterialBottomTab.Navigator>
+	);
+}
+
+/**
+ * Drawer Navigator
+ * https://reactnavigation.org/docs/drawer-navigator
+ * */
+
+const DrawNav = createDrawerNavigator<RootStackParamList>();
+
+function DrawerNavigator() {
+	return (
+		<DrawNav.Navigator
+			initialRouteName="Categories"
+			screenOptions={{
+				...Object.assign(MainHeaderStyle),
+				drawerActiveTintColor: Colors.accentColor,
+				drawerLabelStyle: {
+					fontFamily: "nunito-bold",
+				},
+			}}
+		>
+			<DrawNav.Screen
+				name="MealsFavs"
+				component={BottomTabNavigator}
+				options={{ headerShown: false, drawerLabel: "Meals" }}
+			/>
+			<DrawNav.Screen
+				name="Filters"
+				component={FiltersScreen}
+				options={{ title: "Filter Meals", drawerLabel: "Filters" }}
+			/>
+		</DrawNav.Navigator>
 	);
 }

@@ -10,6 +10,8 @@ import {
 import { RootStackScreenProps } from "../types";
 import { CATEGORIES } from "../data/dummy-data";
 import Category from "../models/category";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import CustomHeaderButton from "../components/HeaderButton";
 
 interface ICategoriesScreenProps {}
 
@@ -39,6 +41,25 @@ const CategoriesScreen: React.FC<
 			</TouchableNativeFeedback>
 		);
 	};
+
+	React.useEffect(() => {
+		props.navigation.setOptions({
+			headerLeft: () => (
+				<HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+					<Item
+						title="Menu"
+						iconName="navicon"
+						color="white"
+						onPress={() => {
+							// @ts-ignore
+							props.navigation.toggleDrawer();
+						}}
+					/>
+				</HeaderButtons>
+			),
+		});
+		return () => {};
+	}, []);
 
 	return (
 		<FlatList

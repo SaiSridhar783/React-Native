@@ -1,4 +1,6 @@
 import * as React from "react";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import CustomHeaderButton from "../components/HeaderButton";
 import MealList from "../components/MealList";
 import { MEALS } from "../data/dummy-data";
 import { RootStackScreenProps } from "../types";
@@ -11,6 +13,19 @@ const FavouritesScreen: React.FC<
 	React.useEffect(() => {
 		props.navigation.setOptions({
 			title: "Your Favourites",
+			headerLeft: () => (
+				<HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+					<Item
+						title="Menu"
+						iconName="navicon"
+						color="white"
+						onPress={() => {
+							// @ts-ignore
+							props.navigation.toggleDrawer();
+						}}
+					/>
+				</HeaderButtons>
+			),
 		});
 		return () => {};
 	}, []);
