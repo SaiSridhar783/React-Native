@@ -16,6 +16,7 @@ import {
 } from "../types";
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import { MainHeaderStyle } from "../constants/Styles";
+import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 
 export default function Navigation() {
 	return (
@@ -37,7 +38,11 @@ function RootNavigator() {
 			<ProductStack.Screen
 				name="ProductsOverview"
 				component={ProductsOverviewScreen}
-				options={{ headerTitle: "All Products" }}
+				options={{ title: "All Products" }}
+			/>
+			<ProductStack.Screen
+				name="ProductDetails"
+				component={ProductDetailScreen}
 			/>
 		</ProductStack.Navigator>
 	);

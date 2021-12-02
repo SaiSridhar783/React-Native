@@ -3,6 +3,7 @@ import { Platform } from "react-native";
 import Colors from "./Colors";
 
 export const MainHeaderStyle: NativeStackNavigationOptions = {
+	headerTitleAlign: "center",
 	headerStyle: {
 		backgroundColor: Platform.OS === "android" ? Colors.primary : "",
 	},
