@@ -1,9 +1,11 @@
 import * as React from "react";
-import { FlatList, StyleSheet, Text } from "react-native";
+import { FlatList } from "react-native";
 import ProductItem from "../../components/shop/ProductItem";
 import { cartActions } from "../../store/cartSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 import { RootStackScreenProps } from "../../types";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButton from "../../components/UI/HeaderButton";
 
 interface IProductsOverviewScreenProps {}
 
@@ -14,6 +16,23 @@ const ProductsOverviewScreen: React.FC<
 		(state) => state.product.availableProducts
 	);
 	const dispatch = useReduxDispatch();
+
+	React.useEffect(() => {
+		props.navigation.setOptions({
+			headerRight: () => (
+				<HeaderButtons HeaderButtonComponent={HeaderButton}>
+					<Item
+						title="Cart"
+						iconName="shopping-cart"
+						onPress={() => {
+							props.navigation.navigate("Cart");
+						}}
+					/>
+				</HeaderButtons>
+			),
+		});
+		return () => {};
+	}, []);
 
 	return (
 		<FlatList

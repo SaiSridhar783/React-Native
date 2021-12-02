@@ -17,6 +17,7 @@ import {
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import { MainHeaderStyle } from "../constants/Styles";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
+import CartScreen from "../screens/shop/CartScreen";
 
 export default function Navigation() {
 	return (
@@ -44,6 +45,7 @@ function RootNavigator() {
 				name="ProductDetails"
 				component={ProductDetailScreen}
 			/>
+			<ProductStack.Screen name="Cart" component={CartScreen} />
 		</ProductStack.Navigator>
 	);
 }
