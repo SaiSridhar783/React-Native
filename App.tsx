@@ -12,9 +12,10 @@ export default function App() {
 	if (!isLoadingComplete) {
 		return null;
 	} else {
-		return;
-		<Provider store={store}>
-			<Navigation />
-		</Provider>;
+		return (
+			<Provider store={store}>
+				<Navigation />
+			</Provider>
+		);
 	}
 }

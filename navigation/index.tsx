@@ -5,16 +5,17 @@
  */
 import * as React from "react";
 import { FontAwesome } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Colors from "../constants/Colors";
 import {
 	RootStackParamList,
 	RootTabParamList,
 	RootTabScreenProps,
 } from "../types";
+import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
+import { MainHeaderStyle } from "../constants/Styles";
 
 export default function Navigation() {
 	return (
@@ -28,12 +29,18 @@ export default function Navigation() {
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const ProductStack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-	return <Stack.Navigator>
-    
-  </Stack.Navigator>;
+	return (
+		<ProductStack.Navigator screenOptions={MainHeaderStyle}>
+			<ProductStack.Screen
+				name="ProductsOverview"
+				component={ProductsOverviewScreen}
+				options={{ headerTitle: "All Products" }}
+			/>
+		</ProductStack.Navigator>
+	);
 }
 
 /**
