@@ -6,6 +6,8 @@ const store = configureStore({
 	reducer: {
 		meal: mealReducer,
 	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

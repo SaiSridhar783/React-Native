@@ -4,7 +4,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import DefaultText from "../components/DefaultText";
 import CustomHeaderButton from "../components/HeaderButton";
-import { MEALS } from "../data/dummy-data";
+import { mealActions } from "../store/mealSlice";
+import { useReduxDispatch, useReduxSelector } from "../store/store";
 import { RootStackScreenProps } from "../types";
 
 interface IMealDetailsScreenProps {}
@@ -13,24 +14,40 @@ const MealDetailsScreen: React.FC<
 	IMealDetailsScreenProps & RootStackScreenProps<"MealDetails">
 > = (props) => {
 	const mealId = props.route.params?.mealId;
+	const { meals } = useReduxSelector((state) => state.meal);
+	const selectedMeal = meals.find((meal) => meal.id === mealId);
+	const dispatch = useReduxDispatch();
 
-	const selectedMeal = MEALS.find((meal) => meal.id === mealId);
+	const currentMealIsFavorite = useReduxSelector((state) =>
+		state.meal.favoriteMeals.some((meal) => meal.id === mealId)
+	);
+
+	const [isAFav, setIsAFav] = React.useState(currentMealIsFavorite);
+
+	const toggleFavoriteHandler = () => {
+		dispatch(mealActions.toggleFavorite(selectedMeal?.id));
+		setIsAFav((prev) => !prev);
+	};
 
 	React.useEffect(() => {
 		props.navigation.setOptions({
-			title: selectedMeal?.title,
+			title:
+				selectedMeal!.title.length >= 20
+					? selectedMeal!.title.slice(0, 20) + "..."
+					: selectedMeal!.title,
 			headerRight: () => (
 				<HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
 					<Item
 						title="Favourite"
-						iconName="star"
-						onPress={() => {}}
+						iconName={isAFav ? "star" : "star-o"}
+						color={isAFav ? "orange" : "gray"}
+						onPress={toggleFavoriteHandler}
 					/>
 				</HeaderButtons>
 			),
 		});
 		return () => {};
-	}, []);
+	}, [isAFav]);
 
 	return (
 		<ScrollView>

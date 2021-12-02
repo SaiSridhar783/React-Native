@@ -2,7 +2,8 @@
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
 		"isolatedModules": true,
-		"strict": true
+		"strict": true,
+		"outDir": "./build",
 	},
 	"extends": "expo/tsconfig.base"
 }

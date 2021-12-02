@@ -7,12 +7,12 @@ import {
 
 interface CustomIHeaderButtonProps extends HeaderButtonProps {
 	title: string;
+	color?: string;
 }
 
 const CustomHeaderButton: React.FC<CustomIHeaderButtonProps> = (props) => {
 	return (
 		<HeaderButton
-			color="orange"
 			{...props}
 			IconComponent={FontAwesome}
 			iconSize={23}
