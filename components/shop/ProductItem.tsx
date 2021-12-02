@@ -77,14 +77,14 @@ const styles = StyleSheet.create({
 	},
 	detail: {
 		alignItems: "center",
-		height: "15%",
+		height: "20%",
 		paddingHorizontal: 10,
 	},
 	actions: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		height: "25%",
+		height: "20%",
 		paddingHorizontal: 20,
 	},
 });

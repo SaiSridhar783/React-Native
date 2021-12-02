@@ -1,5 +1,13 @@
 import * as React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {
+	View,
+	ScrollView,
+	Text,
+	StyleSheet,
+	Image,
+	Button,
+} from "react-native";
+import Colors from "../../constants/Colors";
 import { useReduxSelector } from "../../store/store";
 import { RootStackScreenProps } from "../../types";
 
@@ -21,10 +29,50 @@ const ProductDetailScreen: React.FC<
 	}, []);
 
 	return (
-		<View>
-			<Text>{selectedProduct?.title}</Text>
-		</View>
+		<ScrollView>
+			<Image
+				source={{ uri: selectedProduct?.imageUrl }}
+				style={styles.image}
+			/>
+			<View style={styles.actions}>
+				<Button
+					title="Add to cart"
+					onPress={() => {}}
+					color={Colors.primary}
+				/>
+			</View>
+			<Text style={styles.price}>
+				${selectedProduct?.price.toFixed(2)}
+			</Text>
+			<Text style={styles.description}>
+				{selectedProduct?.description}
+			</Text>
+		</ScrollView>
 	);
 };
+
+const styles = StyleSheet.create({
+	image: {
+		width: "100%",
+		height: 300,
+	},
+	price: {
+		color: "#888",
+		fontSize: 20,
+		textAlign: "center",
+		marginVertical: 20,
+		fontFamily: "nunito-black",
+	},
+	description: {
+		fontSize: 14,
+		padding: 20,
+		lineHeight: 24,
+		fontFamily: "nunito-semibold",
+	},
+	actions: {
+		marginVertical: 10,
+		alignItems: "center",
+	},
+});
 
 export default ProductDetailScreen;
