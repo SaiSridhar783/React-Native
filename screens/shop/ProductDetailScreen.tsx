@@ -8,7 +8,8 @@ import {
 	Button,
 } from "react-native";
 import Colors from "../../constants/Colors";
-import { useReduxSelector } from "../../store/store";
+import { cartActions } from "../../store/cartSlice";
+import { useReduxDispatch, useReduxSelector } from "../../store/store";
 import { RootStackScreenProps } from "../../types";
 
 interface IProductDetailScreenProps {}
@@ -20,6 +21,7 @@ const ProductDetailScreen: React.FC<
 	const selectedProduct = useReduxSelector((state) =>
 		state.product.availableProducts.find((p) => p.id === productId)
 	);
+	const dispatch = useReduxDispatch();
 
 	React.useEffect(() => {
 		props.navigation.setOptions({
@@ -37,7 +39,9 @@ const ProductDetailScreen: React.FC<
 			<View style={styles.actions}>
 				<Button
 					title="Add to cart"
-					onPress={() => {}}
+					onPress={() => {
+						dispatch(cartActions.addProduct(selectedProduct!));
+					}}
 					color={Colors.primary}
 				/>
 			</View>
