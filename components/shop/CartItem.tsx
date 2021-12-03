@@ -3,10 +3,11 @@ import * as React from "react";
 import { View, Text, StyleSheet, TouchableNativeFeedback } from "react-native";
 
 interface ICartItemProps {
-	onRemove: () => void;
+	onRemove?: () => void;
 	quantity: number;
 	title: string;
 	amount: number;
+	deletable?: boolean;
 }
 
 const CartItem: React.FC<ICartItemProps> = (props) => {
@@ -18,14 +19,16 @@ const CartItem: React.FC<ICartItemProps> = (props) => {
 			</View>
 			<View style={styles.itemData}>
 				<Text style={styles.amount}>${props.amount.toFixed(2)}</Text>
-				<TouchableNativeFeedback onPress={props.onRemove}>
-					<FontAwesome
-						name="trash"
-						size={23}
-						color="red"
-						style={styles.deleteButton}
-					/>
-				</TouchableNativeFeedback>
+				{props.deletable && (
+					<TouchableNativeFeedback onPress={props.onRemove}>
+						<FontAwesome
+							name="trash"
+							size={23}
+							color="red"
+							style={styles.deleteButton}
+						/>
+					</TouchableNativeFeedback>
+				)}
 			</View>
 		</View>
 	);
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
 	},
 	amount: {
 		fontSize: 16,
-		color: "#888",
+		color: "gray",
 		fontFamily: "nunito-bold",
 	},
 });

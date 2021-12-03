@@ -1,13 +1,18 @@
 import * as React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import Colors from "../../constants/Colors";
+import { ICartItemArray } from "../../models/cart-item";
+import CartItem from "./CartItem";
 
 interface IOrderItemProps {
 	amount: number;
 	date: string;
+	items: ICartItemArray[];
 }
 
 const OrderItem: React.FC<IOrderItemProps> = (props) => {
+	const [showDetails, setShowDetails] = React.useState(false);
+
 	return (
 		<View style={styles.orderItem}>
 			<View style={styles.summary}>
@@ -19,10 +24,24 @@ const OrderItem: React.FC<IOrderItemProps> = (props) => {
 			<View style={styles.buttonContainer}>
 				<Button
 					color={Colors.primary}
-					title="Show Details"
-					onPress={() => {}}
+					title={showDetails ? "Hide Details" : "Show Details"}
+					onPress={() => {
+						setShowDetails((prev) => !prev);
+					}}
 				/>
 			</View>
+			{showDetails && (
+				<View style={styles.detailItems}>
+					{props.items.map((cartItem) => (
+						<CartItem
+							amount={cartItem.sum}
+							quantity={cartItem.quantity}
+							title={cartItem.productTitle}
+							key={cartItem.productId}
+						/>
+					))}
+				</View>
+			)}
 		</View>
 	);
 };
@@ -58,6 +77,9 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer: {
 		alignSelf: "flex-end",
+	},
+	detailItems: {
+		width: "100%",
 	},
 });
 

@@ -15,6 +15,7 @@ const OrdersScreen: React.FC<IOrdersScreenProps> = (props) => {
 				<OrderItem
 					amount={itemData.item.totalAmount}
 					date={itemData.item.readableDate}
+					items={itemData.item.items}
 				/>
 			)}
 		/>

@@ -71,6 +71,7 @@ const CartScreen: React.FC<ICartScreenProps & RootStackScreenProps<"Cart">> = (
 								)
 							);
 						}}
+						deletable
 					/>
 				)}
 			/>
