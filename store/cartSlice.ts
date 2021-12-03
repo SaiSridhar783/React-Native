@@ -32,6 +32,21 @@ const cartSlice = createSlice({
 				state.totalAmount += productPrice;
 			}
 		},
+		removeProduct: (
+			state: typeof initialState,
+			action: { type: string; payload: string }
+		) => {
+			const pid = action.payload;
+			const currentQty = state.items[pid].quantity;
+			if (currentQty > 1) {
+				state.items[pid].quantity -= 1;
+				state.items[pid].sum -= state.items[pid].productPrice;
+				state.totalAmount -= state.items[pid].productPrice;
+			} else {
+				state.totalAmount -= state.items[pid].sum;
+				delete state.items[pid];
+			}
+		},
 	},
 });
 
