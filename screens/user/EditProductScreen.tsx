@@ -30,11 +30,8 @@ const EditProductScreen: React.FC<
 		setHasSubmitted(true);
 	};
 
-	console.log(editingProduct, "Waka");
-
 	React.useEffect(() => {
 		if (hasSubmitted) {
-			console.log([title, description, price, imageUrl]);
 			editingProduct
 				? dispatch(
 						productActions.updateProduct({
@@ -53,6 +50,7 @@ const EditProductScreen: React.FC<
 						})
 				  );
 			setHasSubmitted(false);
+			props.navigation.goBack();
 		}
 	});
 

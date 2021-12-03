@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, FlatList } from "react-native";
+import { Alert, Button, FlatList } from "react-native";
 import ProductItem from "../../components/shop/ProductItem";
 import Colors from "../../constants/Colors";
 import { productActions } from "../../store/productSlice";
@@ -21,6 +21,23 @@ const UserProductsScreen: React.FC<
 			productId: id,
 			screen: "TabOne",
 		});
+	};
+
+	const deleteHandler = (id: string) => {
+		Alert.alert(
+			"Are you sure?",
+			"Do you really want to delete your product?",
+			[
+				{ text: "No", style: "default" },
+				{
+					text: "Yes",
+					style: "destructive",
+					onPress: () => {
+						dispatch(productActions.deleteProduct(id));
+					},
+				},
+			]
+		);
 	};
 
 	return (
@@ -45,11 +62,7 @@ const UserProductsScreen: React.FC<
 					<Button
 						color={Colors.primary}
 						title="Delete"
-						onPress={() => {
-							dispatch(
-								productActions.deleteProduct(itemData.item.id)
-							);
-						}}
+						onPress={deleteHandler.bind(null, itemData.item.id)}
 					/>
 				</ProductItem>
 			)}
