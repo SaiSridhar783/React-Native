@@ -20,9 +20,7 @@ const productSlice = createSlice({
 			);
 		},
 	},
-	extraReducers: (builder) => {
-		
-	},
+	extraReducers: (builder) => {},
 });
 
 export const productActions = productSlice.actions;
