@@ -4,6 +4,7 @@
  */
 
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { DrawerScreenProps } from "@react-navigation/drawer";
 import {
 	CompositeScreenProps,
 	NavigatorScreenParams,
@@ -42,3 +43,8 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
 		BottomTabScreenProps<RootTabParamList, Screen>,
 		NativeStackScreenProps<RootStackParamList>
 	>;
+
+export type RootDrawerParamList = {
+	Orders: DrawerScreenProps<RootStackParamList>;
+	Products: DrawerScreenProps<RootStackParamList>;
+};

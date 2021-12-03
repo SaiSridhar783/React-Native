@@ -5,6 +5,9 @@ import { Provider } from "react-redux";
 import useCachedResources from "./hooks/useCachedResources";
 import Navigation from "./navigation";
 import store from "./store/store";
+import { enableScreens } from "react-native-screens";
+
+enableScreens()
 
 export default function App() {
 	const isLoadingComplete = useCachedResources();

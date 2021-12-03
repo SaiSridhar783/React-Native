@@ -10,19 +10,22 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import {
+	RootDrawerParamList,
 	RootStackParamList,
 	RootTabParamList,
-	RootTabScreenProps,
 } from "../types";
+import Colors from "../constants/Colors";
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import { MainHeaderStyle } from "../constants/Styles";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import OrdersScreen from "../screens/shop/OrdersScreen";
 
 export default function Navigation() {
 	return (
 		<NavigationContainer>
-			<RootNavigator />
+			<DrawerNavigator />
 		</NavigationContainer>
 	);
 }
@@ -59,9 +62,40 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
-function TabBarIcon(props: {
+function DrawerBarIcon(props: {
 	name: React.ComponentProps<typeof FontAwesome>["name"];
 	color: string;
 }) {
 	return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+}
+
+const Drawer = createDrawerNavigator<RootDrawerParamList>();
+
+function DrawerNavigator() {
+	return (
+		<Drawer.Navigator
+			screenOptions={{ drawerActiveTintColor: Colors.primary }}
+		>
+			<Drawer.Screen
+				name="Products"
+				component={RootNavigator}
+				options={{
+					headerShown: false,
+					drawerIcon: (props) => (
+						<DrawerBarIcon name="shopping-bag" {...props} />
+					),
+				}}
+			/>
+			<Drawer.Screen
+				name="Orders"
+				component={OrdersScreen}
+				options={{
+					...Object.assign(MainHeaderStyle),
+					drawerIcon: (config) => (
+						<DrawerBarIcon name="list" {...config} />
+					),
+				}}
+			/>
+		</Drawer.Navigator>
+	);
 }
