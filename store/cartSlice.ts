@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICartItem, createCartItem } from "../models/cart-item";
 import { Product } from "../models/product";
+import { orderActions } from "./orderSlice";
 
 const initialState = {
 	items: {} as { [id: string]: ICartItem },
@@ -47,10 +48,15 @@ const cartSlice = createSlice({
 				delete state.items[pid];
 			}
 		},
-		clearCart: (state: typeof initialState) => {
-			state.items = {};
-			state.totalAmount = 0;
-		},
+	},
+	extraReducers: (builder) => {
+		builder.addCase(
+			orderActions.addOrder,
+			(state: typeof initialState, action) => {
+				state.items = {};
+				state.totalAmount = 0;
+			}
+		);
 	},
 });
 

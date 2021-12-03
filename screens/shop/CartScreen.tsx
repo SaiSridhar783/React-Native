@@ -50,7 +50,7 @@ const CartScreen: React.FC<ICartScreenProps & RootStackScreenProps<"Cart">> = (
 								items: cartItems,
 							})
 						);
-						dispatch(cartActions.clearCart());
+						//dispatch(cartActions.clearCart());
 						props.navigation.popToTop();
 						props.navigation.navigate("Orders");
 					}}
