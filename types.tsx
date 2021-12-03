@@ -47,4 +47,5 @@ export type RootTabScreenProps<Screen extends keyof RootTabParamList> =
 export type RootDrawerParamList = {
 	Orders: DrawerScreenProps<RootStackParamList>;
 	Products: DrawerScreenProps<RootStackParamList>;
+	Admin: DrawerScreenProps<RootStackParamList>;
 };

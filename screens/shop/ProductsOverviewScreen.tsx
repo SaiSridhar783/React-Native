@@ -1,5 +1,5 @@
 import * as React from "react";
-import { FlatList } from "react-native";
+import { Button, FlatList } from "react-native";
 import ProductItem from "../../components/shop/ProductItem";
 import { cartActions } from "../../store/cartSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
@@ -7,6 +7,7 @@ import { RootStackScreenProps } from "../../types";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
 import { DrawerActions } from "@react-navigation/native";
+import Colors from "../../constants/Colors";
 
 interface IProductsOverviewScreenProps {}
 
@@ -48,6 +49,13 @@ const ProductsOverviewScreen: React.FC<
 		return () => {};
 	}, []);
 
+	const viewDetailsHandler = (id: string) => {
+		props.navigation.navigate("ProductDetails", {
+			productId: id,
+			screen: "TabOne",
+		});
+	};
+
 	return (
 		<FlatList
 			data={products}
@@ -56,16 +64,24 @@ const ProductsOverviewScreen: React.FC<
 					image={itemData.item.imageUrl}
 					title={itemData.item.title}
 					price={itemData.item.price}
-					onViewDetail={() => {
-						props.navigation.navigate("ProductDetails", {
-							productId: itemData.item.id,
-							screen: "TabOne",
-						});
-					}}
-					onAddToCart={() => {
-						dispatch(cartActions.addProduct(itemData.item));
-					}}
-				/>
+					onSelect={viewDetailsHandler.bind(null, itemData.item.id)}
+				>
+					<Button
+						color={Colors.primary}
+						title="View Details"
+						onPress={viewDetailsHandler.bind(
+							null,
+							itemData.item.id
+						)}
+					/>
+					<Button
+						color={Colors.primary}
+						title="To Cart"
+						onPress={() => {
+							dispatch(cartActions.addProduct(itemData.item));
+						}}
+					/>
+				</ProductItem>
 			)}
 		/>
 	);

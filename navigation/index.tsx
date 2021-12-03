@@ -21,6 +21,7 @@ import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import OrdersScreen from "../screens/shop/OrdersScreen";
+import UserProductsScreen from "../screens/user/UserProductsScreen";
 
 export default function Navigation() {
 	return (
@@ -94,6 +95,17 @@ function DrawerNavigator() {
 					drawerIcon: (config) => (
 						<DrawerBarIcon name="list" {...config} />
 					),
+				}}
+			/>
+			<Drawer.Screen
+				name="Admin"
+				component={UserProductsScreen}
+				options={{
+					...Object.assign(MainHeaderStyle),
+					drawerIcon: (config) => (
+						<DrawerBarIcon name="user" {...config} />
+					),
+					title: "Your Products",
 				}}
 			/>
 		</Drawer.Navigator>
