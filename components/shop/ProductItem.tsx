@@ -6,6 +6,7 @@ import {
 	Image,
 	TouchableNativeFeedback,
 } from "react-native";
+import Card from "../UI/Card";
 
 interface IProductItemProps {
 	image: string;
@@ -16,7 +17,7 @@ interface IProductItemProps {
 
 const ProductItem: React.FC<IProductItemProps> = (props) => {
 	return (
-		<View style={styles.product}>
+		<Card style={styles.product}>
 			<TouchableNativeFeedback onPress={props.onSelect} useForeground>
 				<View>
 					<Image style={styles.image} source={{ uri: props.image }} />
@@ -29,18 +30,12 @@ const ProductItem: React.FC<IProductItemProps> = (props) => {
 					<View style={styles.actions}>{props.children}</View>
 				</View>
 			</TouchableNativeFeedback>
-		</View>
+		</Card>
 	);
 };
 
 const styles = StyleSheet.create({
 	product: {
-		shadowColor: "black",
-		shadowOpacity: 0.26,
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 8,
-		elevation: 5,
-		borderRadius: 10,
 		overflow: "hidden",
 		backgroundColor: "whitesmoke",
 		height: 300,

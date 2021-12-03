@@ -1,6 +1,7 @@
 import * as React from "react";
 import { FlatList, Button, View, Text, StyleSheet } from "react-native";
 import CartItem from "../../components/shop/CartItem";
+import Card from "../../components/UI/Card";
 import Colors from "../../constants/Colors";
 import { cartActions } from "../../store/cartSlice";
 import { orderActions } from "../../store/orderSlice";
@@ -32,7 +33,7 @@ const CartScreen: React.FC<ICartScreenProps & RootStackScreenProps<"Cart">> = (
 
 	return (
 		<View style={styles.screen}>
-			<View style={styles.summary}>
+			<Card style={styles.summary}>
 				<Text style={styles.summaryText}>
 					Total:&nbsp;
 					<Text style={styles.amount}>
@@ -55,7 +56,7 @@ const CartScreen: React.FC<ICartScreenProps & RootStackScreenProps<"Cart">> = (
 						props.navigation.navigate("Orders");
 					}}
 				/>
-			</View>
+			</Card>
 			<FlatList
 				data={cartItems}
 				keyExtractor={(item) => item.productId}
@@ -90,12 +91,6 @@ const styles = StyleSheet.create({
 		width: "100%",
 		padding: 10,
 		marginBottom: 20,
-		shadowColor: "black",
-		shadowOpacity: 0.26,
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 8,
-		elevation: 5,
-		borderRadius: 10,
 		backgroundColor: "white",
 	},
 	summaryText: {
