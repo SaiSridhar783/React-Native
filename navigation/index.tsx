@@ -71,17 +71,18 @@ function AdminNavigator() {
 					title: "Your Products",
 					headerLeft: () => <MenuDrawer navigation={navigation} />,
 					headerRight: () => (
-						<CreateProduct navigation={navigation} />
+						<CreateProduct
+							navigation={navigation}
+							title="Add"
+							iconName="plus"
+							onPress={() => {}}
+						/>
 					),
 				})}
 			/>
 			<AdminStack.Screen
 				name="EditProduct"
 				component={EditProductScreen}
-				options={({ navigation }) => ({
-					title: "Edit Product",
-					headerLeft: () => <MenuDrawer navigation={navigation} />,
-				})}
 			/>
 		</AdminStack.Navigator>
 	);

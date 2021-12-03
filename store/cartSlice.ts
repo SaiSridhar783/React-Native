@@ -51,9 +51,11 @@ const cartSlice = createSlice({
 				state.totalAmount = 0;
 			})
 			.addCase(productActions.deleteProduct, (state, action) => {
-				const itemToDelete = state.items[action.payload];
-				state.totalAmount -= itemToDelete.sum;
-				delete state.items[action.payload];
+				try {
+					const itemToDelete = state.items[action.payload];
+					state.totalAmount -= itemToDelete.sum;
+					delete state.items[action.payload];
+				} catch (e) {}
 			});
 	},
 });
