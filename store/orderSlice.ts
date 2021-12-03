@@ -12,7 +12,7 @@ const orderSlice = createSlice({
 	initialState,
 	reducers: {
 		addOrder: (
-			state: typeof initialState,
+			state,
 			action: {
 				type: string;
 				payload: { items: ICartItemArray[]; amount: number };
