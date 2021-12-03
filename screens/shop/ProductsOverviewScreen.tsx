@@ -8,6 +8,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
 import { DrawerActions } from "@react-navigation/native";
 import Colors from "../../constants/Colors";
+import MenuDrawer from "../../components/UI/MenuDrawer";
 
 interface IProductsOverviewScreenProps {}
 
@@ -28,19 +29,6 @@ const ProductsOverviewScreen: React.FC<
 						iconName="shopping-cart"
 						onPress={() => {
 							props.navigation.navigate("Cart");
-						}}
-					/>
-				</HeaderButtons>
-			),
-			headerLeft: () => (
-				<HeaderButtons HeaderButtonComponent={HeaderButton}>
-					<Item
-						title="Menu"
-						iconName="navicon"
-						onPress={() => {
-							props.navigation.dispatch(
-								DrawerActions.toggleDrawer()
-							);
 						}}
 					/>
 				</HeaderButtons>

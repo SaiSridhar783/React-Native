@@ -36,7 +36,7 @@ const CartScreen: React.FC<ICartScreenProps & RootStackScreenProps<"Cart">> = (
 				<Text style={styles.summaryText}>
 					Total:&nbsp;
 					<Text style={styles.amount}>
-						${cartTotalAmount.toFixed(2)}
+						${Math.round(cartTotalAmount * 100) / 100}
 					</Text>
 				</Text>
 				<Button

@@ -6,7 +6,6 @@
 import * as React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import {
@@ -22,6 +21,9 @@ import CartScreen from "../screens/shop/CartScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import OrdersScreen from "../screens/shop/OrdersScreen";
 import UserProductsScreen from "../screens/user/UserProductsScreen";
+import EditProductScreen from "../screens/user/EditProductScreen";
+import MenuDrawer from "../components/UI/MenuDrawer";
+import CreateProduct from "../components/UI/CreateProduct";
 
 export default function Navigation() {
 	return (
@@ -43,7 +45,10 @@ function RootNavigator() {
 			<ProductStack.Screen
 				name="ProductsOverview"
 				component={ProductsOverviewScreen}
-				options={{ title: "All Products" }}
+				options={({ navigation }) => ({
+					title: "All Products",
+					headerLeft: () => <MenuDrawer navigation={navigation} />,
+				})}
 			/>
 			<ProductStack.Screen
 				name="ProductDetails"
@@ -54,11 +59,33 @@ function RootNavigator() {
 	);
 }
 
-/**
- * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
- * https://reactnavigation.org/docs/bottom-tab-navigator
- */
-const BottomTab = createBottomTabNavigator<RootTabParamList>();
+const AdminStack = createNativeStackNavigator<RootDrawerParamList>();
+
+function AdminNavigator() {
+	return (
+		<AdminStack.Navigator screenOptions={MainHeaderStyle}>
+			<AdminStack.Screen
+				name="UserProducts"
+				component={UserProductsScreen}
+				options={({ navigation }) => ({
+					title: "Your Products",
+					headerLeft: () => <MenuDrawer navigation={navigation} />,
+					headerRight: () => (
+						<CreateProduct navigation={navigation} />
+					),
+				})}
+			/>
+			<AdminStack.Screen
+				name="EditProduct"
+				component={EditProductScreen}
+				options={({ navigation }) => ({
+					title: "Edit Product",
+					headerLeft: () => <MenuDrawer navigation={navigation} />,
+				})}
+			/>
+		</AdminStack.Navigator>
+	);
+}
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -75,13 +102,15 @@ const Drawer = createDrawerNavigator<RootDrawerParamList>();
 function DrawerNavigator() {
 	return (
 		<Drawer.Navigator
-			screenOptions={{ drawerActiveTintColor: Colors.primary }}
+			screenOptions={{
+				drawerActiveTintColor: Colors.primary,
+				headerShown: false,
+			}}
 		>
 			<Drawer.Screen
 				name="Products"
 				component={RootNavigator}
 				options={{
-					headerShown: false,
 					drawerIcon: (props) => (
 						<DrawerBarIcon name="shopping-bag" {...props} />
 					),
@@ -91,6 +120,7 @@ function DrawerNavigator() {
 				name="Orders"
 				component={OrdersScreen}
 				options={{
+					headerShown: true,
 					...Object.assign(MainHeaderStyle),
 					drawerIcon: (config) => (
 						<DrawerBarIcon name="list" {...config} />
@@ -99,13 +129,12 @@ function DrawerNavigator() {
 			/>
 			<Drawer.Screen
 				name="Admin"
-				component={UserProductsScreen}
+				component={AdminNavigator}
 				options={{
 					...Object.assign(MainHeaderStyle),
 					drawerIcon: (config) => (
 						<DrawerBarIcon name="user" {...config} />
 					),
-					title: "Your Products",
 				}}
 			/>
 		</Drawer.Navigator>
