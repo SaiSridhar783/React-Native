@@ -1,5 +1,6 @@
 import * as React from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
+import OrderItem from "../../components/shop/OrderItem";
 import { useReduxSelector } from "../../store/store";
 
 interface IOrdersScreenProps {}
@@ -10,7 +11,12 @@ const OrdersScreen: React.FC<IOrdersScreenProps> = (props) => {
 	return (
 		<FlatList
 			data={orders}
-			renderItem={(itemData) => <Text>{itemData.item.totalAmount}</Text>}
+			renderItem={(itemData) => (
+				<OrderItem
+					amount={itemData.item.totalAmount}
+					date={itemData.item.readableDate}
+				/>
+			)}
 		/>
 	);
 };

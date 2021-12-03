@@ -10,6 +10,10 @@ const store = configureStore({
 		cart: cartReducer,
 		order: orderReducer,
 	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			serializableCheck: false,
+		}),
 	devTools: true,
 });
 

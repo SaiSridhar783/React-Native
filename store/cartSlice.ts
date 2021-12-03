@@ -47,6 +47,10 @@ const cartSlice = createSlice({
 				delete state.items[pid];
 			}
 		},
+		clearCart: (state: typeof initialState) => {
+			state.items = {};
+			state.totalAmount = 0;
+		},
 	},
 });
 

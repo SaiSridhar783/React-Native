@@ -5,10 +5,13 @@ import Colors from "../../constants/Colors";
 import { cartActions } from "../../store/cartSlice";
 import { orderActions } from "../../store/orderSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
+import { RootStackScreenProps } from "../../types";
 
 interface ICartScreenProps {}
 
-const CartScreen: React.FC<ICartScreenProps> = (props) => {
+const CartScreen: React.FC<ICartScreenProps & RootStackScreenProps<"Cart">> = (
+	props
+) => {
 	const cartItems = useReduxSelector((state) => {
 		const transformedCartItems = [];
 		for (const key in state.cart.items) {
@@ -31,7 +34,7 @@ const CartScreen: React.FC<ICartScreenProps> = (props) => {
 		<View style={styles.screen}>
 			<View style={styles.summary}>
 				<Text style={styles.summaryText}>
-					Total:{" "}
+					Total:&nbsp;
 					<Text style={styles.amount}>
 						${cartTotalAmount.toFixed(2)}
 					</Text>
@@ -41,7 +44,15 @@ const CartScreen: React.FC<ICartScreenProps> = (props) => {
 					title="Checkout"
 					disabled={cartItems.length === 0}
 					onPress={() => {
-						dispatch(orderActions.addOrder({amount: cartTotalAmount, items: cartItems}));
+						dispatch(
+							orderActions.addOrder({
+								amount: cartTotalAmount,
+								items: cartItems,
+							})
+						);
+						dispatch(cartActions.clearCart());
+						props.navigation.popToTop();
+						props.navigation.navigate("Orders");
 					}}
 				/>
 			</View>

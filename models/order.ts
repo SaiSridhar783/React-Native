@@ -5,6 +5,7 @@ export interface IOrder {
 	items: ICartItemArray[];
 	totalAmount: number;
 	date: Date;
+	readableDate: string;
 }
 
 export function createOrder(
@@ -18,5 +19,12 @@ export function createOrder(
 		items,
 		totalAmount,
 		date,
+		readableDate: date.toLocaleDateString("en-IN", {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+		}),
 	};
 }
