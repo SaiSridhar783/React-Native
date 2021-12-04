@@ -8,6 +8,7 @@ import {
 	Alert,
 } from "react-native";
 import CreateProduct from "../../components/UI/CreateProduct";
+import Input from "../../components/UI/Input";
 import { productActions } from "../../store/productSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 import { RootDrawerScreenProps } from "../../types";
@@ -144,89 +145,79 @@ const EditProductScreen: React.FC<
 		});
 	}, []);
 
-	const textChangeHandler = (
-		inputIdentifier: keyof typeof initialState.inputValues,
-		text: string
-	) => {
-		let isValid = false;
-		if (text.trim().length > 0) {
-			isValid = true;
-		}
-
-		hookDispatch({
-			type: FORM_INPUT_UPDATE,
-			payload: { value: text, isValid, input: inputIdentifier },
-		});
-	};
+	const inputChangeHandler = React.useCallback(
+		(
+			inputIdentifier: keyof typeof initialState.inputValues,
+			inputValue: string,
+			isValid: boolean
+		) => {
+			hookDispatch({
+				type: FORM_INPUT_UPDATE,
+				payload: { value: inputValue, isValid, input: inputIdentifier },
+			});
+		},
+		[hookDispatch]
+	);
 
 	return (
 		<ScrollView>
 			<View style={styles.form}>
-				<View style={styles.formControl}>
-					<Text style={styles.label}>Title</Text>
-					<TextInput
-						style={styles.input}
-						value={hookState.inputValues.title}
-						onChangeText={textChangeHandler.bind(null, "title")}
-						autoCapitalize="sentences"
-						autoCorrect
-						returnKeyType="next"
-					/>
-					{!hookState.inputValidities.title && hasSubmitted && (
-						<Text>Title is too short!!</Text>
-					)}
-				</View>
-				<View style={styles.formControl}>
-					<Text style={styles.label}>Image URL</Text>
-					<TextInput
-						style={styles.input}
-						value={hookState.inputValues.imageUrl}
-						onChangeText={textChangeHandler.bind(null, "imageUrl")}
-					/>
-				</View>
+				<Input
+					id="title"
+					label="Title"
+					errorText="Title is too short!"
+					autoCapitalize="sentences"
+					autoCorrect
+					returnKeyType="next"
+					onInputChange={inputChangeHandler}
+					initialValue={editingProduct?.title || ""}
+					initiallyValid={!!editingProduct}
+					required
+				/>
+				<Input
+					id="imageUrl"
+					label="Image URL"
+					errorText="Please enter a valid image URL!"
+					returnKeyType="next"
+					onInputChange={inputChangeHandler}
+					initialValue={editingProduct?.imageUrl || ""}
+					initiallyValid={!!editingProduct}
+					required
+				/>
 				{!editingProduct && (
-					<View style={styles.formControl}>
-						<Text style={styles.label}>Price</Text>
-						<TextInput
-							style={styles.input}
-							value={hookState.inputValues.price.toString()}
-							keyboardType="decimal-pad"
-							onChangeText={textChangeHandler.bind(null, "price")}
-						/>
-					</View>
-				)}
-				<View style={styles.formControl}>
-					<Text style={styles.label}>Description</Text>
-					<TextInput
-						style={styles.input}
-						value={hookState.inputValues.description}
-						onChangeText={textChangeHandler.bind(
-							null,
-							"description"
-						)}
+					<Input
+						id="price"
+						label="Price"
+						errorText="Please enter a valid price!"
+						keyboardType="decimal-pad"
+						returnKeyType="next"
+						onInputChange={inputChangeHandler}
+						initialValue=""
+						initiallyValid
+						required
+						min={0.1}
 					/>
-				</View>
+				)}
+				<Input
+					id="description"
+					label="Description"
+					errorText="Please enter a valid description!"
+					autoCapitalize="sentences"
+					autoCorrect
+					multiline
+					numberOfLines={3}
+					onInputChange={inputChangeHandler}
+					initialValue={editingProduct?.description || ""}
+					initiallyValid={!!editingProduct}
+					required
+					minLength={10}
+				/>
 			</View>
 		</ScrollView>
 	);
 };
 
 const styles = StyleSheet.create({
-	formControl: {
-		width: "100%",
-	},
-	label: {
-		fontFamily: "nunito-black",
-		marginVertical: 8,
-	},
-	input: {
-		paddingHorizontal: 2,
-		paddingVertical: 5,
-		borderBottomColor: "#ccc",
-		borderBottomWidth: 1,
-		fontSize: 18,
-		fontFamily: "nunito",
-	},
 	form: {
 		margin: 20,
 	},
