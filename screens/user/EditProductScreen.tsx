@@ -1,11 +1,20 @@
 import * as React from "react";
-import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	ScrollView,
+	TextInput,
+	Alert,
+} from "react-native";
 import CreateProduct from "../../components/UI/CreateProduct";
 import { productActions } from "../../store/productSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 import { RootDrawerScreenProps } from "../../types";
 
 interface IEditProductScreenProps {}
+
+const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
 const EditProductScreen: React.FC<
 	IEditProductScreenProps & RootDrawerScreenProps<"EditProduct">
@@ -16,14 +25,65 @@ const EditProductScreen: React.FC<
 	);
 	const dispatch = useReduxDispatch();
 
-	const [title, setTitle] = React.useState(editingProduct?.title || "");
-	const [description, setDescription] = React.useState(
-		editingProduct?.description || ""
+	/* Input Field Values */
+	const initialState = {
+		inputValues: {
+			title: editingProduct?.title || "",
+			description: editingProduct?.description || "",
+			price: editingProduct?.price || "",
+			imageUrl: editingProduct?.imageUrl || "",
+		},
+		inputValidities: {
+			title: editingProduct ? true : false,
+			description: editingProduct ? true : false,
+			price: editingProduct ? true : false,
+			imageUrl: editingProduct ? true : false,
+		},
+		formIsValid: editingProduct ? true : false,
+	};
+
+	const formReducer = (
+		state: typeof initialState,
+		action: {
+			type: string;
+			payload: {
+				value: string;
+				isValid: boolean;
+				input: keyof typeof initialState.inputValues;
+			};
+		}
+	) => {
+		switch (action.type) {
+			case FORM_INPUT_UPDATE:
+				const updatedValues = {
+					...state.inputValues,
+					[action.payload.input]: action.payload.value,
+				};
+				const updatedValidities = {
+					...state.inputValidities,
+					[action.payload.input]: action.payload.isValid,
+				};
+				let updatedFormIsValid = true;
+				for (const key in updatedValidities) {
+					updatedFormIsValid =
+						// @ts-ignore
+						updatedFormIsValid && updatedValidities[key];
+				}
+				return {
+					formIsValid: updatedFormIsValid,
+					inputValues: updatedValues,
+					inputValidities: updatedValidities,
+				};
+			default:
+				return state;
+		}
+	};
+
+	const [hookState, hookDispatch] = React.useReducer(
+		formReducer,
+		initialState
 	);
-	const [price, setPrice] = React.useState(editingProduct?.price || "");
-	const [imageUrl, setImageUrl] = React.useState(
-		editingProduct?.imageUrl || ""
-	);
+	/* End */
 	const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
 	const editProductHandler = () => {
@@ -32,21 +92,35 @@ const EditProductScreen: React.FC<
 
 	React.useEffect(() => {
 		if (hasSubmitted) {
+			if (!hookState.formIsValid) {
+				Alert.alert(
+					"Invalid Input!",
+					"Please check the errors in the form.",
+					[
+						{
+							text: "Okay",
+							style: "destructive",
+							onPress: () => setHasSubmitted(false),
+						},
+					]
+				);
+				return;
+			}
 			editingProduct
 				? dispatch(
 						productActions.updateProduct({
 							id: proId.current!,
-							title,
-							imageUrl,
-							description,
+							title: hookState.inputValues.title,
+							imageUrl: hookState.inputValues.imageUrl,
+							description: hookState.inputValues.description,
 						})
 				  )
 				: dispatch(
 						productActions.createProduct({
-							title,
-							description,
-							price: +price,
-							imageUrl,
+							title: hookState.inputValues.title,
+							description: hookState.inputValues.description,
+							price: +hookState.inputValues.price,
+							imageUrl: hookState.inputValues.imageUrl,
 						})
 				  );
 			setHasSubmitted(false);
@@ -70,6 +144,21 @@ const EditProductScreen: React.FC<
 		});
 	}, []);
 
+	const textChangeHandler = (
+		inputIdentifier: keyof typeof initialState.inputValues,
+		text: string
+	) => {
+		let isValid = false;
+		if (text.trim().length > 0) {
+			isValid = true;
+		}
+
+		hookDispatch({
+			type: FORM_INPUT_UPDATE,
+			payload: { value: text, isValid, input: inputIdentifier },
+		});
+	};
+
 	return (
 		<ScrollView>
 			<View style={styles.form}>
@@ -77,16 +166,22 @@ const EditProductScreen: React.FC<
 					<Text style={styles.label}>Title</Text>
 					<TextInput
 						style={styles.input}
-						value={title}
-						onChangeText={(text) => setTitle(text)}
+						value={hookState.inputValues.title}
+						onChangeText={textChangeHandler.bind(null, "title")}
+						autoCapitalize="sentences"
+						autoCorrect
+						returnKeyType="next"
 					/>
+					{!hookState.inputValidities.title && hasSubmitted && (
+						<Text>Title is too short!!</Text>
+					)}
 				</View>
 				<View style={styles.formControl}>
 					<Text style={styles.label}>Image URL</Text>
 					<TextInput
 						style={styles.input}
-						value={imageUrl}
-						onChangeText={(text) => setImageUrl(text)}
+						value={hookState.inputValues.imageUrl}
+						onChangeText={textChangeHandler.bind(null, "imageUrl")}
 					/>
 				</View>
 				{!editingProduct && (
@@ -94,9 +189,9 @@ const EditProductScreen: React.FC<
 						<Text style={styles.label}>Price</Text>
 						<TextInput
 							style={styles.input}
-							value={price?.toString()}
-							keyboardType="numeric"
-							onChangeText={(text) => setPrice(+text)}
+							value={hookState.inputValues.price.toString()}
+							keyboardType="decimal-pad"
+							onChangeText={textChangeHandler.bind(null, "price")}
 						/>
 					</View>
 				)}
@@ -104,8 +199,11 @@ const EditProductScreen: React.FC<
 					<Text style={styles.label}>Description</Text>
 					<TextInput
 						style={styles.input}
-						value={description}
-						onChangeText={(text) => setDescription(text)}
+						value={hookState.inputValues.description}
+						onChangeText={textChangeHandler.bind(
+							null,
+							"description"
+						)}
 					/>
 				</View>
 			</View>
