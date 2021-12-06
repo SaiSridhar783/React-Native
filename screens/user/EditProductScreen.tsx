@@ -106,23 +106,24 @@ const EditProductScreen: React.FC<
 				);
 				return;
 			}
-			editingProduct
-				? dispatch(
-						productActions.updateProduct({
-							id: proId.current!,
-							title: hookState.inputValues.title,
-							imageUrl: hookState.inputValues.imageUrl,
-							description: hookState.inputValues.description,
-						})
-				  )
-				: dispatch(
-						productActions.createProduct({
-							title: hookState.inputValues.title,
-							description: hookState.inputValues.description,
-							price: +hookState.inputValues.price,
-							imageUrl: hookState.inputValues.imageUrl,
-						})
-				  );
+			if (editingProduct) {
+				dispatch(
+					productActions.updateProduct({
+						id: proId.current!,
+						title: hookState.inputValues.title,
+						imageUrl: hookState.inputValues.imageUrl,
+						description: hookState.inputValues.description,
+					})
+				);
+			} else
+				dispatch(
+					productActions.createProduct({
+						title: hookState.inputValues.title,
+						description: hookState.inputValues.description,
+						price: +hookState.inputValues.price,
+						imageUrl: hookState.inputValues.imageUrl,
+					})
+				);
 			setHasSubmitted(false);
 			props.navigation.goBack();
 		}
@@ -159,11 +160,6 @@ const EditProductScreen: React.FC<
 	);
 
 	return (
-		/* <KeyboardAvoidingView
-			behavior="padding"
-			keyboardVerticalOffset={100}
-			style={{ flex: 1 }}
-		> */
 		<ScrollView>
 			<View style={styles.form}>
 				<Input
@@ -218,7 +214,6 @@ const EditProductScreen: React.FC<
 				/>
 			</View>
 		</ScrollView>
-		/* </KeyboardAvoidingView> */
 	);
 };
 

@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import PRODUCTS from "../data/dummy-data";
 import { Product } from "../models/product";
 
 const createProduct = createAsyncThunk<
@@ -42,7 +41,7 @@ const fetchProducts = createAsyncThunk<
 	void,
 	{ rejectValue: string }
 >(
-	"product/fetch", // @ts-ignore
+	"product/fetchProducts", // @ts-ignore
 	async (payload, thunkAPI) => {
 		try {
 			const respReq = await fetch(
@@ -72,6 +71,52 @@ const fetchProducts = createAsyncThunk<
 	}
 );
 
+const updateProduct = createAsyncThunk<
+	Product,
+	Partial<Product>,
+	{ rejectValue: string } // @ts-ignore
+>("product/updateProduct", async (payload, thunkAPI) => {
+	try {
+		await fetch(
+			`https://rnts-shop-default-rtdb.firebaseio.com/products/${payload.id}.json`,
+			{
+				method: "PATCH",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({
+					title: payload.title,
+					description: payload.description,
+					imageUrl: payload.imageUrl,
+				}),
+			}
+		);
+
+		return thunkAPI.fulfillWithValue({
+			...payload,
+			ownerId: "u1",
+		});
+	} catch (e: any) {
+		return thunkAPI.rejectWithValue(e.message);
+	}
+});
+
+const deleteProduct = createAsyncThunk<string>(
+	"product/delete", // @ts-ignore
+	async (payload) => {
+		try {
+			await fetch(
+				`https://rnts-shop-default-rtdb.firebaseio.com/products/${payload}.json`,
+				{
+					method: "DELETE",
+				}
+			);
+		} catch (e) {}
+		return payload;
+	}
+);
+
 const initialState = {
 	availableProducts: [] as Product[],
 	userProducts: [] as Product[],
@@ -82,44 +127,7 @@ const initialState = {
 const productSlice = createSlice({
 	name: "product",
 	initialState: initialState,
-	reducers: {
-		deleteProduct: (state, action) => {
-			const productId = action.payload;
-			state.userProducts = state.userProducts.filter(
-				(product) => product.id !== productId
-			);
-			state.availableProducts = state.availableProducts.filter(
-				(product) => product.id !== productId
-			);
-		},
-		updateProduct: (
-			state,
-			action: {
-				type: string;
-				payload: Omit<Product, "price" | "ownerId">;
-			}
-		) => {
-			const productIndex = state.userProducts.findIndex(
-				(prod) => prod.id === action.payload.id
-			);
-
-			state.userProducts[productIndex].title = action.payload.title;
-			state.userProducts[productIndex].imageUrl = action.payload.imageUrl;
-			state.userProducts[productIndex].description =
-				action.payload.description;
-
-			const availableProductIndex = state.availableProducts.findIndex(
-				(prod) => prod.id === action.payload.id
-			);
-
-			state.availableProducts[availableProductIndex].title =
-				action.payload.title;
-			state.availableProducts[availableProductIndex].imageUrl =
-				action.payload.imageUrl;
-			state.availableProducts[availableProductIndex].description =
-				action.payload.description;
-		},
-	},
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
 			.addCase(createProduct.fulfilled, (state, action) => {
@@ -145,13 +153,45 @@ const productSlice = createSlice({
 			.addCase(fetchProducts.rejected, (state, action) => {
 				state.error = action.payload;
 				state.isLoading = false;
+			})
+			.addCase(updateProduct.fulfilled, (state, action) => {
+				const productIndex = state.userProducts.findIndex(
+					(prod) => prod.id === action.payload.id
+				);
+
+				state.userProducts[productIndex].title = action.payload.title;
+				state.userProducts[productIndex].imageUrl =
+					action.payload.imageUrl;
+				state.userProducts[productIndex].description =
+					action.payload.description;
+
+				const availableProductIndex = state.availableProducts.findIndex(
+					(prod) => prod.id === action.payload.id
+				);
+
+				state.availableProducts[availableProductIndex].title =
+					action.payload.title;
+				state.availableProducts[availableProductIndex].imageUrl =
+					action.payload.imageUrl;
+				state.availableProducts[availableProductIndex].description =
+					action.payload.description;
+			})
+			.addCase(deleteProduct.fulfilled, (state, action) => {
+				const productId = action.payload;
+				state.userProducts = state.userProducts.filter(
+					(product) => product.id !== productId
+				);
+				state.availableProducts = state.availableProducts.filter(
+					(product) => product.id !== productId
+				);
 			});
 	},
 });
 
 export const productActions = {
-	...productSlice.actions,
 	createProduct,
 	fetchProducts,
+	updateProduct,
+	deleteProduct,
 };
 export const productReducer = productSlice.reducer;

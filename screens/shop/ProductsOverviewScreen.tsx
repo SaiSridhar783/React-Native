@@ -39,6 +39,10 @@ const ProductsOverviewScreen: React.FC<
 			),
 		});
 
+		/* props.navigation.addListener("focus", () => {
+			dispatch(productActions.fetchProducts());
+		}); */
+
 		dispatch(productActions.fetchProducts());
 	}, []);
 
