@@ -135,6 +135,7 @@ const initialState = {
 	userProducts: [] as Product[],
 	error: null as string | null | undefined,
 	isLoading: true,
+	hasLoaded: false,
 };
 
 const productSlice = createSlice({
@@ -153,6 +154,7 @@ const productSlice = createSlice({
 					(prod) => prod.ownerId === "u1"
 				);
 				state.isLoading = false;
+				state.hasLoaded = true;
 				state.error = null;
 			})
 			.addCase(fetchProducts.rejected, (state, action) => {

@@ -73,12 +73,16 @@ const ProductsOverviewScreen: React.FC<
 		);
 	}
 
-	return products.isLoading ? (
+	return products.isLoading && !products.hasLoaded ? (
 		<View style={styles.centered}>
 			<ActivityIndicator size="large" color={Colors.primary} />
 		</View>
 	) : (
 		<FlatList
+			onRefresh={() => {
+				dispatch(productActions.fetchProducts());
+			}}
+			refreshing={products.isLoading}
 			data={products.availableProducts}
 			renderItem={(itemData) => (
 				<ProductItem
