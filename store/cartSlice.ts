@@ -43,20 +43,19 @@ const cartSlice = createSlice({
 				delete state.items[pid];
 			}
 		},
-	},
-	extraReducers: (builder) => {
-		builder
-			.addCase(orderActions.addOrder, (state, action) => {
-				state.items = {};
-				state.totalAmount = 0;
-			})
-			.addCase(productActions.deleteProduct, (state, action) => {
-				try {
-					const itemToDelete = state.items[action.payload];
-					state.totalAmount -= itemToDelete.sum;
-					delete state.items[action.payload];
-				} catch (e) {}
-			});
+		clearCart: (state) => {
+			state.items = {};
+			state.totalAmount = 0;
+		},
+		deleteHelper: (state, action) => {
+			try {
+				const itemToDelete = state.items[action.payload];
+				state.totalAmount -= itemToDelete.sum;
+				delete state.items[action.payload];
+			} catch (e: any) {
+				console.log("productSlice delete", e.message);
+			}
+		},
 	},
 });
 

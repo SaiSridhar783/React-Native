@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Product } from "../models/product";
+import { cartActions } from "./cartSlice";
+import { RootState } from "./store";
 
 const createProduct = createAsyncThunk<
 	Product,
@@ -107,7 +109,7 @@ const deleteProduct = createAsyncThunk<string, any, { rejectValue: string }>(
 	async (payload, thunkAPI) => {
 		try {
 			const resp = await fetch(
-				`https://rnts-shop-default-rtdb.firebaseio.cm/products/${payload}.json`,
+				`https://rnts-shop-default-rtdb.firebaseio.com/products/${payload}.json`,
 				{
 					method: "DELETE",
 				}
@@ -116,6 +118,10 @@ const deleteProduct = createAsyncThunk<string, any, { rejectValue: string }>(
 			if (!resp.ok) {
 				return thunkAPI.rejectWithValue("Something went wrong...");
 			}
+
+			const rootState = thunkAPI.getState() as RootState;
+
+			thunkAPI.dispatch(cartActions.deleteHelper(payload));
 
 			return thunkAPI.fulfillWithValue(payload);
 		} catch (e: any) {
