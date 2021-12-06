@@ -102,18 +102,25 @@ const updateProduct = createAsyncThunk<
 	}
 });
 
-const deleteProduct = createAsyncThunk<string>(
+const deleteProduct = createAsyncThunk<string, any, { rejectValue: string }>(
 	"product/delete", // @ts-ignore
-	async (payload) => {
+	async (payload, thunkAPI) => {
 		try {
-			await fetch(
-				`https://rnts-shop-default-rtdb.firebaseio.com/products/${payload}.json`,
+			const resp = await fetch(
+				`https://rnts-shop-default-rtdb.firebaseio.cm/products/${payload}.json`,
 				{
 					method: "DELETE",
 				}
 			);
-		} catch (e) {}
-		return payload;
+
+			if (!resp.ok) {
+				return thunkAPI.rejectWithValue("Something went wrong...");
+			}
+
+			return thunkAPI.fulfillWithValue(payload);
+		} catch (e: any) {
+			return thunkAPI.rejectWithValue(e.message);
+		}
 	}
 );
 
@@ -130,14 +137,6 @@ const productSlice = createSlice({
 	reducers: {},
 	extraReducers: (builder) => {
 		builder
-			.addCase(createProduct.fulfilled, (state, action) => {
-				state.error = null;
-				state.availableProducts.push(action.payload);
-				state.userProducts.push(action.payload);
-			})
-			.addCase(createProduct.rejected, (state, action) => {
-				state.error = action.payload;
-			})
 			.addCase(fetchProducts.pending, (state) => {
 				state.error = null;
 				state.isLoading = true;
@@ -153,6 +152,24 @@ const productSlice = createSlice({
 			.addCase(fetchProducts.rejected, (state, action) => {
 				state.error = action.payload;
 				state.isLoading = false;
+			})
+			.addCase(createProduct.pending, (state) => {
+				state.error = null;
+				state.isLoading = true;
+			})
+			.addCase(createProduct.fulfilled, (state, action) => {
+				state.error = null;
+				state.availableProducts.push(action.payload);
+				state.userProducts.push(action.payload);
+				state.isLoading = false;
+			})
+			.addCase(createProduct.rejected, (state, action) => {
+				state.error = action.payload;
+				state.isLoading = false;
+			})
+			.addCase(updateProduct.pending, (state) => {
+				state.error = null;
+				state.isLoading = true;
 			})
 			.addCase(updateProduct.fulfilled, (state, action) => {
 				const productIndex = state.userProducts.findIndex(
@@ -175,6 +192,17 @@ const productSlice = createSlice({
 					action.payload.imageUrl;
 				state.availableProducts[availableProductIndex].description =
 					action.payload.description;
+
+				state.isLoading = false;
+				state.error = null;
+			})
+			.addCase(updateProduct.rejected, (state, action) => {
+				state.error = action.payload;
+				state.isLoading = false;
+			})
+			.addCase(deleteProduct.pending, (state, action) => {
+				state.error = null;
+				state.isLoading = true;
 			})
 			.addCase(deleteProduct.fulfilled, (state, action) => {
 				const productId = action.payload;
@@ -184,6 +212,12 @@ const productSlice = createSlice({
 				state.availableProducts = state.availableProducts.filter(
 					(product) => product.id !== productId
 				);
+				state.isLoading = false;
+				state.error = null;
+			})
+			.addCase(deleteProduct.rejected, (state, action) => {
+				state.error = action.payload;
+				state.isLoading = false;
 			});
 	},
 });

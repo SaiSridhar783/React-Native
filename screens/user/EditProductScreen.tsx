@@ -5,9 +5,13 @@ import {
 	ScrollView,
 	Alert,
 	KeyboardAvoidingView,
+	Text,
+	Button,
+	ActivityIndicator,
 } from "react-native";
 import CreateProduct from "../../components/UI/CreateProduct";
 import Input from "../../components/UI/Input";
+import Colors from "../../constants/Colors";
 import { productActions } from "../../store/productSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 import { RootDrawerScreenProps } from "../../types";
@@ -24,6 +28,8 @@ const EditProductScreen: React.FC<
 		state.product.userProducts.find((p) => p.id === proId.current)
 	);
 	const dispatch = useReduxDispatch();
+
+	const { isLoading, error } = useReduxSelector((state) => state.product);
 
 	/* Input Field Values */
 	const initialState = {
@@ -87,6 +93,16 @@ const EditProductScreen: React.FC<
 	const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
 	const editProductHandler = () => {
+		/* Alert.alert("Are you sure?", undefined, [
+			{
+				text: "Yes",
+				style: "destructive",
+				onPress: () => {
+					setHasSubmitted(true);
+				},
+			},
+			{ text: "No", style: "cancel" },
+		]); */
 		setHasSubmitted(true);
 	};
 
@@ -106,26 +122,38 @@ const EditProductScreen: React.FC<
 				);
 				return;
 			}
-			if (editingProduct) {
-				dispatch(
-					productActions.updateProduct({
-						id: proId.current!,
-						title: hookState.inputValues.title,
-						imageUrl: hookState.inputValues.imageUrl,
-						description: hookState.inputValues.description,
-					})
-				);
-			} else
-				dispatch(
-					productActions.createProduct({
-						title: hookState.inputValues.title,
-						description: hookState.inputValues.description,
-						price: +hookState.inputValues.price,
-						imageUrl: hookState.inputValues.imageUrl,
-					})
-				);
+
+			async function disp() {
+				if (editingProduct) {
+					await dispatch(
+						productActions.updateProduct({
+							id: proId.current!,
+							title: hookState.inputValues.title,
+							imageUrl: hookState.inputValues.imageUrl,
+							description: hookState.inputValues.description,
+						})
+					);
+				} else
+					await dispatch(
+						productActions.createProduct({
+							title: hookState.inputValues.title,
+							description: hookState.inputValues.description,
+							price: +hookState.inputValues.price,
+							imageUrl: hookState.inputValues.imageUrl,
+						})
+					);
+			}
+
+			disp();
 			setHasSubmitted(false);
-			props.navigation.goBack();
+			if (!isLoading && error) {
+				Alert.alert("Something went wrong...", undefined, [
+					{
+						text: "Okay",
+						style: "destructive",
+					},
+				]);
+			} else props.navigation.goBack();
 		}
 	});
 

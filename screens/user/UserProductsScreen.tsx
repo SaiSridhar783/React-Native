@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Alert, Button, FlatList } from "react-native";
+import {
+	ActivityIndicator,
+	Alert,
+	Button,
+	FlatList,
+	StyleSheet,
+	View,
+} from "react-native";
 import ProductItem from "../../components/shop/ProductItem";
 import Colors from "../../constants/Colors";
 import { productActions } from "../../store/productSlice";
@@ -11,8 +18,8 @@ interface IUserProductsScreenProps {}
 const UserProductsScreen: React.FC<
 	IUserProductsScreenProps & RootDrawerScreenProps<"UserProducts">
 > = (props) => {
-	const userProducts = useReduxSelector(
-		(state) => state.product.userProducts
+	const { userProducts, isLoading, error } = useReduxSelector(
+		(state) => state.product
 	);
 	const dispatch = useReduxDispatch();
 
@@ -39,6 +46,14 @@ const UserProductsScreen: React.FC<
 			]
 		);
 	};
+
+	if (isLoading) {
+		return (
+			<View style={styles.centered}>
+				<ActivityIndicator size="large" color={Colors.primary} />
+			</View>
+		);
+	}
 
 	return (
 		<FlatList
@@ -69,5 +84,9 @@ const UserProductsScreen: React.FC<
 		/>
 	);
 };
+
+const styles = StyleSheet.create({
+	centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+});
 
 export default UserProductsScreen;
