@@ -2,18 +2,17 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ICartItemArray } from "../models/cart-item";
 import { createOrder, IOrder } from "../models/order";
 import { cartActions } from "./cartSlice";
-import store, { RootState } from "./store";
 
 const initialState = {
 	orders: [] as IOrder[],
 	isLoading: false,
-	error: false,
+	error: null as null | string,
 };
 
 const addOrder = createAsyncThunk<
 	IOrder,
 	{ items: ICartItemArray[]; amount: number },
-	{ rejectValue: string; getState: () => typeof store.getState } // @ts-ignore
+	{ rejectValue: any } // @ts-ignore
 >("order/createOrder", async (payload, thunkAPI) => {
 	try {
 		const date = new Date();
@@ -49,16 +48,75 @@ const addOrder = createAsyncThunk<
 	}
 });
 
+const fetchOrders = createAsyncThunk<
+	IOrder[],
+	void,
+	{ rejectValue: any } // @ts-ignore
+>("order/fetchOrders", async (payload, thunkAPI) => {
+	try {
+		const resp = await fetch(
+			"https://rnts-shop-default-rtdb.firebaseio.com/orders/u1.json"
+		);
+
+		if (!resp.ok) {
+			return thunkAPI.rejectWithValue("Something went wrong...");
+		}
+
+		const responseData = await resp.json();
+
+		const loadedData: IOrder[] = [];
+
+		for (let uid in responseData) {
+			loadedData.push(
+				createOrder(
+					uid,
+					responseData[uid].items,
+					responseData[uid].totalAmount,
+					new Date(responseData[uid].date)
+				)
+			);
+		}
+
+		return thunkAPI.fulfillWithValue(loadedData);
+	} catch (e: any) {
+		return thunkAPI.rejectWithValue(e.message);
+	}
+});
+
 const orderSlice = createSlice({
 	name: "order",
 	initialState,
 	reducers: {},
 	extraReducers: (builder) => {
-		builder.addCase(addOrder.fulfilled, (state, action) => {
-			state.orders.push(action.payload);
-		});
+		builder
+			.addCase(addOrder.pending, (state) => {
+				state.isLoading = true;
+				state.error = null;
+			})
+			.addCase(addOrder.fulfilled, (state, action) => {
+				state.orders.push(action.payload);
+				state.error = null;
+				state.isLoading = false;
+			})
+			.addCase(addOrder.rejected, (state, action) => {
+				state.isLoading = false;
+				state.error = action.payload;
+			})
+			.addCase(fetchOrders.pending, (state) => {
+				state.isLoading = true;
+				state.error = null;
+			})
+			.addCase(fetchOrders.fulfilled, (state, action) => {
+				state.orders = action.payload;
+				state.error = null;
+				state.isLoading = false;
+			})
+			.addCase(fetchOrders.rejected, (state, action) => {
+				state.isLoading = false;
+				state.error = action.payload;
+			});
 	},
 });
 
 export const orderReducer = orderSlice.reducer;
-export const orderActions = { addOrder };
+export const orderActions = { addOrder, fetchOrders };

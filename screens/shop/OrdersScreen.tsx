@@ -1,12 +1,29 @@
 import * as React from "react";
-import { FlatList, View, Text, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import OrderItem from "../../components/shop/OrderItem";
-import { useReduxSelector } from "../../store/store";
+import Colors from "../../constants/Colors";
+import { orderActions } from "../../store/orderSlice";
+import { useReduxDispatch, useReduxSelector } from "../../store/store";
 
 interface IOrdersScreenProps {}
 
 const OrdersScreen: React.FC<IOrdersScreenProps> = (props) => {
-	const orders = useReduxSelector((state) => state.order.orders);
+	const { orders, isLoading, error } = useReduxSelector(
+		(state) => state.order
+	);
+	const dispatch = useReduxDispatch();
+
+	React.useEffect(() => {
+		dispatch(orderActions.fetchOrders());
+	}, []);
+
+	if (isLoading) {
+		return (
+			<View style={styles.centered}>
+				<ActivityIndicator size="large" color={Colors.primary} />
+			</View>
+		);
+	}
 
 	return (
 		<FlatList
@@ -21,5 +38,9 @@ const OrdersScreen: React.FC<IOrdersScreenProps> = (props) => {
 		/>
 	);
 };
+
+const styles = StyleSheet.create({
+	centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+});
 
 export default OrdersScreen;
