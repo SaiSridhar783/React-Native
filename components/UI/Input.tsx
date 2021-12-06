@@ -11,7 +11,7 @@ interface IInputProps {
 	id: "title" | "imageUrl" | "description" | "price";
 	label: string;
 	errorText: string;
-	initialValue: string;
+	initialValue: string | number;
 	initiallyValid: boolean;
 	onInputChange: (
 		inputIndentifier: "title" | "imageUrl" | "description" | "price",
@@ -112,7 +112,11 @@ const Input: React.FC<IInputProps & TextInputProps> = (props) => {
 				onChangeText={textChangeHandler}
 				onBlur={lostFocusHandler}
 			/>
-			{!inputState.isValid && <Text>{props.errorText}</Text>}
+			{!inputState.isValid && inputState.touched && (
+				<View style={styles.errorContainer}>
+					<Text style={styles.errorText}>{props.errorText}</Text>
+				</View>
+			)}
 		</View>
 	);
 };
@@ -132,6 +136,14 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		fontSize: 18,
 		fontFamily: "nunito",
+	},
+	errorContainer: {
+		marginVertical: 5,
+	},
+	errorText: {
+		fontFamily: "nunito-semibold",
+		color: "red",
+		fontSize: 13,
 	},
 });
 
