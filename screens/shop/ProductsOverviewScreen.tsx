@@ -1,23 +1,27 @@
 import * as React from "react";
-import { Button, FlatList } from "react-native";
+import {
+	ActivityIndicator,
+	Button,
+	FlatList,
+	View,
+	StyleSheet,
+	Text,
+} from "react-native";
 import ProductItem from "../../components/shop/ProductItem";
 import { cartActions } from "../../store/cartSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 import { RootStackScreenProps } from "../../types";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
-import { DrawerActions } from "@react-navigation/native";
 import Colors from "../../constants/Colors";
-import MenuDrawer from "../../components/UI/MenuDrawer";
+import { productActions } from "../../store/productSlice";
 
 interface IProductsOverviewScreenProps {}
 
 const ProductsOverviewScreen: React.FC<
 	IProductsOverviewScreenProps & RootStackScreenProps<"ProductsOverview">
 > = (props) => {
-	const products = useReduxSelector(
-		(state) => state.product.availableProducts
-	);
+	const products = useReduxSelector((state) => state.product);
 	const dispatch = useReduxDispatch();
 
 	React.useEffect(() => {
@@ -34,7 +38,8 @@ const ProductsOverviewScreen: React.FC<
 				</HeaderButtons>
 			),
 		});
-		return () => {};
+
+		dispatch(productActions.fetchProducts());
 	}, []);
 
 	const viewDetailsHandler = (id: string) => {
@@ -44,9 +49,33 @@ const ProductsOverviewScreen: React.FC<
 		});
 	};
 
-	return (
+	if (
+		!products.isLoading &&
+		(products.error || products.availableProducts.length === 0)
+	) {
+		return (
+			<View style={styles.centered}>
+				<Text>
+					{products.error || "No Products Found. Start Adding Some!"}
+				</Text>
+				<Button
+					title="Try Again"
+					onPress={() => {
+						dispatch(productActions.fetchProducts());
+					}}
+					color={Colors.primary}
+				/>
+			</View>
+		);
+	}
+
+	return products.isLoading ? (
+		<View style={styles.centered}>
+			<ActivityIndicator size="large" color={Colors.primary} />
+		</View>
+	) : (
 		<FlatList
-			data={products}
+			data={products.availableProducts}
 			renderItem={(itemData) => (
 				<ProductItem
 					image={itemData.item.imageUrl}
@@ -74,5 +103,9 @@ const ProductsOverviewScreen: React.FC<
 		/>
 	);
 };
+
+const styles = StyleSheet.create({
+	centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+});
 
 export default ProductsOverviewScreen;
