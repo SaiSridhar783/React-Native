@@ -1,11 +1,19 @@
 import { LinearGradient } from "expo-linear-gradient";
 import * as React from "react";
-import { View, ScrollView, StyleSheet, Button, Text } from "react-native";
+import {
+	View,
+	ScrollView,
+	StyleSheet,
+	Button,
+	Text,
+	ActivityIndicator,
+	Alert,
+} from "react-native";
 import Card from "../../components/UI/Card";
 import Input from "../../components/UI/Input";
 import Colors from "../../constants/Colors";
 import { authActions } from "../../store/authSlice";
-import { useReduxDispatch } from "../../store/store";
+import { useReduxDispatch, useReduxSelector } from "../../store/store";
 
 interface IAuthScreenProps {}
 
@@ -88,6 +96,14 @@ const AuthScreen: React.FC<IAuthScreenProps> = (props) => {
 		}
 	};
 
+	const { isLoading, error } = useReduxSelector((state) => state.auth);
+
+	React.useEffect(() => {
+		if (error) {
+			Alert.alert(error, "Please check your inputs!");
+		}
+	}, [error]);
+
 	return (
 		<View style={styles.screen}>
 			<LinearGradient
@@ -122,11 +138,23 @@ const AuthScreen: React.FC<IAuthScreenProps> = (props) => {
 							onInputChange={inputChangeHandler}
 							style={{ marginBottom: 10 }}
 						/>
-						<Button
-							title={loginMode ? "Login" : "Sign Up"}
-							color={Colors.primary}
-							onPress={signupHandler}
-						/>
+						{/* {error && (
+							<View style={styles.errorContainer}>
+								<Text style={styles.errorText}>{error}</Text>
+							</View>
+						)} */}
+						{isLoading ? (
+							<ActivityIndicator
+								size="small"
+								color={Colors.primary}
+							/>
+						) : (
+							<Button
+								title={loginMode ? "Login" : "Sign Up"}
+								color={Colors.primary}
+								onPress={signupHandler}
+							/>
+						)}
 						<View style={styles.switch}>
 							<Text style={styles.switchText}>
 								{loginMode ? "Don't" : "Already"} have an
@@ -172,6 +200,14 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
+	},
+	errorContainer: {
+		marginVertical: 5,
+		alignItems: "center",
+	},
+	errorText: {
+		fontFamily: "nunito-bold",
+		color: "red",
 	},
 });
 
