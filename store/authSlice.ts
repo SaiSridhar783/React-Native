@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import creds from "../config.json";
 
 const signup = createAsyncThunk<
@@ -27,10 +28,17 @@ const signup = createAsyncThunk<
 			return thunkAPI.rejectWithValue(resData.error.message);
 		}
 
-		return thunkAPI.fulfillWithValue({
+		const payloadDatum = {
 			token: resData.idToken,
 			userID: resData.localId,
-		});
+		};
+
+		const expirationDate = new Date(
+			new Date().getTime() + +resData.expiresIn * 1000
+		);
+
+		saveDataToStorage(payloadDatum, expirationDate);
+		return thunkAPI.fulfillWithValue(payloadDatum);
 	} catch (e: any) {
 		return thunkAPI.rejectWithValue(e.message);
 	}
@@ -63,14 +71,28 @@ const login = createAsyncThunk<
 			return thunkAPI.rejectWithValue(resData.error.message);
 		}
 
-		return thunkAPI.fulfillWithValue({
+		const payloadDatum = {
 			token: resData.idToken,
 			userID: resData.localId,
-		});
+		};
+
+		const expirationDate = new Date(
+			new Date().getTime() + +resData.expiresIn * 1000
+		);
+
+		saveDataToStorage(payloadDatum, expirationDate);
+		return thunkAPI.fulfillWithValue(payloadDatum);
 	} catch (e: any) {
 		return thunkAPI.rejectWithValue(e.message);
 	}
 });
+
+function saveDataToStorage(payload: any, expirationDate: Date) {
+	AsyncStorage.setItem(
+		"userData",
+		JSON.stringify({ ...payload, expiryDate: expirationDate.toISOString() })
+	);
+}
 
 const initialState = {
 	isLoading: false,
@@ -84,6 +106,9 @@ const authSlice = createSlice({
 	reducers: {
 		logout: (state) => {
 			state.data = { token: "", userID: "" };
+		},
+		saveCreds: (state, action) => {
+			state.data = action.payload;
 		},
 	},
 	extraReducers: (builder) => {

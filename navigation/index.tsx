@@ -32,6 +32,7 @@ import CreateProduct from "../components/UI/CreateProduct";
 import AuthScreen from "../screens/user/AuthScreen";
 import { useReduxDispatch, useReduxSelector } from "../store/store";
 import { authActions } from "../store/authSlice";
+import StartupScreen from "../screens/StartupScreen";
 
 /* export default function Navigation() {
 	return (
@@ -180,6 +181,11 @@ const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 function AuthNavigator() {
 	return (
 		<AuthStack.Navigator screenOptions={MainHeaderStyle}>
+			<AuthStack.Screen
+				name="Startup"
+				component={StartupScreen}
+				options={{ headerShown: false }}
+			/>
 			<AuthStack.Screen
 				name="Login"
 				component={AuthScreen}

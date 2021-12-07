@@ -62,6 +62,7 @@ export type RootDrawerScreenProps<Screen extends keyof RootDrawerParamList> =
 
 export type AuthStackParamList = {
 	Login: NavigatorScreenParams<RootTabParamList> | undefined;
+	Startup: NavigatorScreenParams<RootTabParamList> | undefined;
 };
 
 export type AuthStackScreenProps<Screen extends keyof AuthStackParamList> =
