@@ -8,9 +8,10 @@ const createProduct = createAsyncThunk<
 	Omit<Product, "id" | "ownerId">,
 	{ rejectValue: string } // @ts-ignore
 >("product/createProduct", async (payload, thunkAPI) => {
+	const rootState = thunkAPI.getState() as RootState;
 	try {
 		const resp = await fetch(
-			"https://rnts-shop-default-rtdb.firebaseio.com/products.json",
+			`https://rnts-shop-default-rtdb.firebaseio.com/products.json?auth=${rootState.auth.data.token}`,
 			{
 				method: "POST",
 				headers: {
@@ -27,6 +28,12 @@ const createProduct = createAsyncThunk<
 		);
 
 		const responseData = await resp.json();
+
+		if (!resp.ok) {
+			return thunkAPI.rejectWithValue(
+				responseData.error.message || responseData.error
+			);
+		}
 
 		return thunkAPI.fulfillWithValue({
 			...payload,
@@ -78,9 +85,10 @@ const updateProduct = createAsyncThunk<
 	Partial<Product>,
 	{ rejectValue: string } // @ts-ignore
 >("product/updateProduct", async (payload, thunkAPI) => {
+	const rootState = thunkAPI.getState() as RootState;
 	try {
-		await fetch(
-			`https://rnts-shop-default-rtdb.firebaseio.com/products/${payload.id}.json`,
+		const resp = await fetch(
+			`https://rnts-shop-default-rtdb.firebaseio.com/products/${payload.id}.json?auth=${rootState.auth.data.token}`,
 			{
 				method: "PATCH",
 				headers: {
@@ -95,6 +103,14 @@ const updateProduct = createAsyncThunk<
 			}
 		);
 
+		const responseData = await resp.json();
+
+		if (!resp.ok) {
+			return thunkAPI.rejectWithValue(
+				responseData.error.message || responseData.error
+			);
+		}
+
 		return thunkAPI.fulfillWithValue({
 			...payload,
 			ownerId: "u1",
@@ -107,22 +123,24 @@ const updateProduct = createAsyncThunk<
 const deleteProduct = createAsyncThunk<string, any, { rejectValue: string }>(
 	"product/delete", // @ts-ignore
 	async (payload, thunkAPI) => {
+		const rootState = thunkAPI.getState() as RootState;
 		try {
 			const resp = await fetch(
-				`https://rnts-shop-default-rtdb.firebaseio.com/products/${payload}.json`,
+				`https://rnts-shop-default-rtdb.firebaseio.com/products/${payload}.json?auth=${rootState.auth.data.token}`,
 				{
 					method: "DELETE",
 				}
 			);
 
+			const responseData = await resp.json();
+
 			if (!resp.ok) {
-				return thunkAPI.rejectWithValue("Something went wrong...");
+				return thunkAPI.rejectWithValue(
+					responseData.error.message || responseData.error
+				);
 			}
 
-			const rootState = thunkAPI.getState() as RootState;
-
 			thunkAPI.dispatch(cartActions.deleteHelper(payload));
-
 			return thunkAPI.fulfillWithValue(payload);
 		} catch (e: any) {
 			return thunkAPI.rejectWithValue(e.message);

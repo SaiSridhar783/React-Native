@@ -139,14 +139,8 @@ const EditProductScreen: React.FC<
 
 			disp();
 			setHasSubmitted(false);
-			if (!isLoading && error) {
-				Alert.alert("Something went wrong...", undefined, [
-					{
-						text: "Okay",
-						style: "destructive",
-					},
-				]);
-			} else props.navigation.goBack();
+
+			props.navigation.goBack();
 		}
 	});
 

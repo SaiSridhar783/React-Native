@@ -47,6 +47,10 @@ const UserProductsScreen: React.FC<
 		);
 	};
 
+	if (error) {
+		Alert.alert("Something went wrong...", error);
+	}
+
 	if (isLoading) {
 		return (
 			<View style={styles.centered}>

@@ -1,8 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ICartItem, createCartItem } from "../models/cart-item";
 import { Product } from "../models/product";
-import { orderActions } from "./orderSlice";
-import { productActions } from "./productSlice";
 
 const initialState = {
 	items: {} as { [id: string]: ICartItem },
