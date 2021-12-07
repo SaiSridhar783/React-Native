@@ -18,13 +18,20 @@ import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
 import { MainHeaderStyle } from "../constants/Styles";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+	createDrawerNavigator,
+	DrawerContentScrollView,
+	DrawerItem,
+	DrawerItemList,
+} from "@react-navigation/drawer";
 import OrdersScreen from "../screens/shop/OrdersScreen";
 import UserProductsScreen from "../screens/user/UserProductsScreen";
 import EditProductScreen from "../screens/user/EditProductScreen";
 import MenuDrawer from "../components/UI/MenuDrawer";
 import CreateProduct from "../components/UI/CreateProduct";
 import AuthScreen from "../screens/user/AuthScreen";
+import { useReduxDispatch, useReduxSelector } from "../store/store";
+import { authActions } from "../store/authSlice";
 
 /* export default function Navigation() {
 	return (
@@ -34,9 +41,10 @@ import AuthScreen from "../screens/user/AuthScreen";
 	);
 } */
 export default function Navigation() {
+	const isAuth = useReduxSelector((state) => state.auth.data.token);
 	return (
 		<NavigationContainer>
-			<AuthNavigator />
+			{isAuth ? <DrawerNavigator /> : <AuthNavigator />}
 		</NavigationContainer>
 	);
 }
@@ -109,11 +117,26 @@ function DrawerBarIcon(props: {
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
 function DrawerNavigator() {
+	const dispatch = useReduxDispatch();
 	return (
 		<Drawer.Navigator
 			screenOptions={{
 				drawerActiveTintColor: Colors.primary,
 				headerShown: false,
+			}}
+			drawerContent={(props) => {
+				return (
+					<DrawerContentScrollView {...props}>
+						<DrawerItemList {...props} />
+						<DrawerItem
+							label="Logout"
+							icon={(props) => (
+								<DrawerBarIcon name="sign-out" {...props} />
+							)}
+							onPress={() => dispatch(authActions.logout())}
+						/>
+					</DrawerContentScrollView>
+				);
 			}}
 		>
 			<Drawer.Screen

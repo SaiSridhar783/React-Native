@@ -27,7 +27,10 @@ const signup = createAsyncThunk<
 			return thunkAPI.rejectWithValue(resData.error.message);
 		}
 
-		return thunkAPI.fulfillWithValue(resData);
+		return thunkAPI.fulfillWithValue({
+			token: resData.idToken,
+			userId: resData.localId,
+		});
 	} catch (e: any) {
 		return thunkAPI.rejectWithValue(e.message);
 	}
@@ -60,7 +63,10 @@ const login = createAsyncThunk<
 			return thunkAPI.rejectWithValue(resData.error.message);
 		}
 
-		thunkAPI.fulfillWithValue(resData);
+		return thunkAPI.fulfillWithValue({
+			token: resData.idToken,
+			userId: resData.localId,
+		});
 	} catch (e: any) {
 		return thunkAPI.rejectWithValue(e.message);
 	}
@@ -69,13 +75,17 @@ const login = createAsyncThunk<
 const initialState = {
 	isLoading: false,
 	error: null as null | string,
-	data: {} as any,
+	data: { token: "", userID: "" },
 };
 
 const authSlice = createSlice({
 	name: "auth",
 	initialState,
-	reducers: {},
+	reducers: {
+		logout: (state) => {
+			state.data = { token: "", userID: "" };
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(signup.pending, (state) => {
@@ -108,4 +118,4 @@ const authSlice = createSlice({
 });
 
 export const authReducer = authSlice.reducer;
-export const authActions = { signup, login };
+export const authActions = { ...authSlice.actions, signup, login };

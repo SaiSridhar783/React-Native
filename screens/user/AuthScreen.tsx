@@ -12,6 +12,7 @@ import {
 import Card from "../../components/UI/Card";
 import Input from "../../components/UI/Input";
 import Colors from "../../constants/Colors";
+import { ERRORS, ERRORS_MAP } from "../../constants/errors";
 import { authActions } from "../../store/authSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 
@@ -100,7 +101,14 @@ const AuthScreen: React.FC<IAuthScreenProps> = (props) => {
 
 	React.useEffect(() => {
 		if (error) {
-			Alert.alert(error, "Please check your inputs!");
+			Alert.alert(
+				ERRORS_MAP[error]
+					?.replaceAll("-", " ")
+					?.replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) =>
+						letter.toUpperCase()
+					),
+				ERRORS[ERRORS_MAP[error]]
+			);
 		}
 	}, [error]);
 
