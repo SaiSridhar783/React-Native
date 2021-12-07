@@ -1,17 +1,7 @@
 import * as React from "react";
-import {
-	View,
-	StyleSheet,
-	ScrollView,
-	Alert,
-	KeyboardAvoidingView,
-	Text,
-	Button,
-	ActivityIndicator,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Alert } from "react-native";
 import CreateProduct from "../../components/UI/CreateProduct";
 import Input from "../../components/UI/Input";
-import Colors from "../../constants/Colors";
 import { productActions } from "../../store/productSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 import { RootDrawerScreenProps } from "../../types";
@@ -55,7 +45,10 @@ const EditProductScreen: React.FC<
 			payload: {
 				value: string;
 				isValid: boolean;
-				input: keyof typeof initialState.inputValues;
+				input:
+					| keyof typeof initialState.inputValues
+					| "email"
+					| "password";
 			};
 		}
 	) => {
@@ -175,7 +168,10 @@ const EditProductScreen: React.FC<
 
 	const inputChangeHandler = React.useCallback(
 		(
-			inputIdentifier: keyof typeof initialState.inputValues,
+			inputIdentifier:
+				| keyof typeof initialState.inputValues
+				| "email"
+				| "password",
 			inputValue: string,
 			isValid: boolean
 		) => {

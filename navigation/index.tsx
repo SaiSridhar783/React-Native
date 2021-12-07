@@ -9,9 +9,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import {
+	AuthStackParamList,
 	RootDrawerParamList,
 	RootStackParamList,
-	RootTabParamList,
 } from "../types";
 import Colors from "../constants/Colors";
 import ProductsOverviewScreen from "../screens/shop/ProductsOverviewScreen";
@@ -24,11 +24,19 @@ import UserProductsScreen from "../screens/user/UserProductsScreen";
 import EditProductScreen from "../screens/user/EditProductScreen";
 import MenuDrawer from "../components/UI/MenuDrawer";
 import CreateProduct from "../components/UI/CreateProduct";
+import AuthScreen from "../screens/user/AuthScreen";
 
-export default function Navigation() {
+/* export default function Navigation() {
 	return (
 		<NavigationContainer>
 			<DrawerNavigator />
+		</NavigationContainer>
+	);
+} */
+export default function Navigation() {
+	return (
+		<NavigationContainer>
+			<AuthNavigator />
 		</NavigationContainer>
 	);
 }
@@ -139,5 +147,21 @@ function DrawerNavigator() {
 				}}
 			/>
 		</Drawer.Navigator>
+	);
+}
+
+/* Authentication */
+
+const AuthStack = createNativeStackNavigator<AuthStackParamList>();
+
+function AuthNavigator() {
+	return (
+		<AuthStack.Navigator screenOptions={MainHeaderStyle}>
+			<AuthStack.Screen
+				name="Login"
+				component={AuthScreen}
+				options={{ title: "Authenticate" }}
+			/>
+		</AuthStack.Navigator>
 	);
 }

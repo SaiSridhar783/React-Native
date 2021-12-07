@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { authReducer } from "./authSlice";
 import { cartReducer } from "./cartSlice";
 import { orderReducer } from "./orderSlice";
 import { productReducer } from "./productSlice";
@@ -9,6 +10,7 @@ const store = configureStore({
 		product: productReducer,
 		cart: cartReducer,
 		order: orderReducer,
+		auth: authReducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware({

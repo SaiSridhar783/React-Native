@@ -8,13 +8,19 @@ import {
 } from "react-native";
 
 interface IInputProps {
-	id: "title" | "imageUrl" | "description" | "price";
+	id: "title" | "imageUrl" | "description" | "price" | "email" | "password";
 	label: string;
 	errorText: string;
 	initialValue: string | number;
 	initiallyValid: boolean;
 	onInputChange: (
-		inputIndentifier: "title" | "imageUrl" | "description" | "price",
+		inputIndentifier:
+			| "title"
+			| "imageUrl"
+			| "description"
+			| "price"
+			| "email"
+			| "password",
 		value: string,
 		isValid: boolean
 	) => void;
@@ -24,6 +30,7 @@ interface IInputProps {
 	maxLength?: number;
 	min?: number;
 	max?: number;
+	style?: object;
 }
 
 interface IInputState {
@@ -103,7 +110,7 @@ const Input: React.FC<IInputProps & TextInputProps> = (props) => {
 	};
 
 	return (
-		<View style={styles.formControl}>
+		<View style={{ ...styles.formControl, ...props.style }}>
 			<Text style={styles.label}>{props.label}</Text>
 			<TextInput
 				{...props}

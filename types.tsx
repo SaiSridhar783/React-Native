@@ -59,3 +59,10 @@ export type RootDrawerParamList = {
 
 export type RootDrawerScreenProps<Screen extends keyof RootDrawerParamList> =
 	DrawerScreenProps<RootDrawerParamList, Screen>;
+
+export type AuthStackParamList = {
+	Login: NavigatorScreenParams<RootTabParamList> | undefined;
+};
+
+export type AuthStackScreenProps<Screen extends keyof AuthStackParamList> =
+	NativeStackScreenProps<AuthStackParamList, Screen>;
