@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
 	ActivityIndicator,
+	Alert,
 	FlatList,
 	StyleSheet,
 	Text,
@@ -22,6 +23,12 @@ const OrdersScreen: React.FC<IOrdersScreenProps> = (props) => {
 	React.useEffect(() => {
 		dispatch(orderActions.fetchOrders());
 	}, []);
+
+	React.useEffect(() => {
+		if (error) {
+			Alert.alert(error);
+		}
+	}, [error]);
 
 	if (isLoading) {
 		return (

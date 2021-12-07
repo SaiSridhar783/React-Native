@@ -20,7 +20,7 @@ const addOrder = createAsyncThunk<
 	try {
 		const date = new Date();
 		const resp = await fetch(
-			`https://rnts-shop-default-rtdb.firebaseio.com/orders/${rootState.auth.data.userID}.json`,
+			`https://rnts-shop-default-rtdb.firebaseio.com/orders/${rootState.auth.data.userID}.json?auth=${rootState.auth.data.token}`,
 			{
 				method: "POST",
 				headers: {
@@ -37,9 +37,9 @@ const addOrder = createAsyncThunk<
 
 		const responseData = await resp.json();
 		if (!resp.ok) {
-			console.log(responseData);
-
-			return thunkAPI.rejectWithValue("Something went wrong...");
+			return thunkAPI.rejectWithValue(
+				responseData.error.message || responseData.error
+			);
 		}
 
 		thunkAPI.dispatch(cartActions.clearCart());
