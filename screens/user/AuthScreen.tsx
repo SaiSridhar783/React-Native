@@ -115,7 +115,7 @@ const AuthScreen: React.FC<IAuthScreenProps> = (props) => {
 	return (
 		<View style={styles.screen}>
 			<LinearGradient
-				colors={["#ffeedd", "#ffdeff"]}
+				colors={["#ffdeff", "#fdf1af"]}
 				style={styles.gradient}
 			>
 				<Card style={{ ...styles.authContainer }}>
