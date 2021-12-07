@@ -13,6 +13,7 @@ import Card from "../../components/UI/Card";
 import Input from "../../components/UI/Input";
 import Colors from "../../constants/Colors";
 import { ERRORS, ERRORS_MAP } from "../../constants/errors";
+import useFormReducer from "../../hooks/useFormReducer";
 import { authActions } from "../../store/authSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 
@@ -35,58 +36,8 @@ const AuthScreen: React.FC<IAuthScreenProps> = (props) => {
 		formIsValid: false,
 	};
 
-	const formReducer = (
-		state: typeof initialState,
-		action: {
-			type: string;
-			payload: {
-				value: string;
-				isValid: boolean;
-				input: string;
-			};
-		}
-	) => {
-		switch (action.type) {
-			case FORM_INPUT_UPDATE:
-				const updatedValues = {
-					...state.inputValues,
-					[action.payload.input]: action.payload.value,
-				};
-				const updatedValidities = {
-					...state.inputValidities,
-					[action.payload.input]: action.payload.isValid,
-				};
-				let updatedFormIsValid = true;
-				for (const key in updatedValidities) {
-					updatedFormIsValid =
-						// @ts-ignore
-						updatedFormIsValid && updatedValidities[key];
-				}
-				return {
-					formIsValid: updatedFormIsValid,
-					inputValues: updatedValues,
-					inputValidities: updatedValidities,
-				};
-			default:
-				return state;
-		}
-	};
-
-	const [hookState, hookDispatch] = React.useReducer(
-		formReducer,
-		initialState
-	);
+	const [hookState, inputChangeHandler] = useFormReducer(initialState);
 	/* End */
-
-	const inputChangeHandler = React.useCallback(
-		(inputIdentifier: string, inputValue: string, isValid: boolean) => {
-			hookDispatch({
-				type: FORM_INPUT_UPDATE,
-				payload: { value: inputValue, isValid, input: inputIdentifier },
-			});
-		},
-		[hookDispatch]
-	);
 
 	const [loginMode, setLoginMode] = React.useState(false);
 	const signupHandler = () => {

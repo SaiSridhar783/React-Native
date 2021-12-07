@@ -2,6 +2,7 @@ import * as React from "react";
 import { View, StyleSheet, ScrollView, Alert } from "react-native";
 import CreateProduct from "../../components/UI/CreateProduct";
 import Input from "../../components/UI/Input";
+import useFormReducer from "../../hooks/useFormReducer";
 import { productActions } from "../../store/productSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 import { RootDrawerScreenProps } from "../../types";
@@ -18,8 +19,6 @@ const EditProductScreen: React.FC<
 		state.product.userProducts.find((p) => p.id === proId.current)
 	);
 	const dispatch = useReduxDispatch();
-
-	const { isLoading, error } = useReduxSelector((state) => state.product);
 
 	/* Input Field Values */
 	const initialState = {
@@ -38,50 +37,7 @@ const EditProductScreen: React.FC<
 		formIsValid: editingProduct ? true : false,
 	};
 
-	const formReducer = (
-		state: typeof initialState,
-		action: {
-			type: string;
-			payload: {
-				value: string;
-				isValid: boolean;
-				input:
-					| keyof typeof initialState.inputValues
-					| "email"
-					| "password";
-			};
-		}
-	) => {
-		switch (action.type) {
-			case FORM_INPUT_UPDATE:
-				const updatedValues = {
-					...state.inputValues,
-					[action.payload.input]: action.payload.value,
-				};
-				const updatedValidities = {
-					...state.inputValidities,
-					[action.payload.input]: action.payload.isValid,
-				};
-				let updatedFormIsValid = true;
-				for (const key in updatedValidities) {
-					updatedFormIsValid =
-						// @ts-ignore
-						updatedFormIsValid && updatedValidities[key];
-				}
-				return {
-					formIsValid: updatedFormIsValid,
-					inputValues: updatedValues,
-					inputValidities: updatedValidities,
-				};
-			default:
-				return state;
-		}
-	};
-
-	const [hookState, hookDispatch] = React.useReducer(
-		formReducer,
-		initialState
-	);
+	const [hookState, inputChangeHandler] = useFormReducer(initialState);
 	/* End */
 	const [hasSubmitted, setHasSubmitted] = React.useState(false);
 
@@ -159,23 +115,6 @@ const EditProductScreen: React.FC<
 			),
 		});
 	}, []);
-
-	const inputChangeHandler = React.useCallback(
-		(
-			inputIdentifier:
-				| keyof typeof initialState.inputValues
-				| "email"
-				| "password",
-			inputValue: string,
-			isValid: boolean
-		) => {
-			hookDispatch({
-				type: FORM_INPUT_UPDATE,
-				payload: { value: inputValue, isValid, input: inputIdentifier },
-			});
-		},
-		[hookDispatch]
-	);
 
 	return (
 		<ScrollView>
