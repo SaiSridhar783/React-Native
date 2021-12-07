@@ -23,6 +23,7 @@ const createProduct = createAsyncThunk<
 					description: payload.description,
 					imageUrl: payload.imageUrl,
 					price: payload.price,
+					ownerId: rootState.auth.data.userID,
 				}),
 			}
 		);
@@ -38,7 +39,7 @@ const createProduct = createAsyncThunk<
 		return thunkAPI.fulfillWithValue({
 			...payload,
 			id: responseData.name,
-			ownerId: "u1",
+			ownerId: rootState.auth.data.userID,
 		});
 	} catch (e: any) {
 		return thunkAPI.rejectWithValue(e.message);
@@ -46,12 +47,14 @@ const createProduct = createAsyncThunk<
 });
 
 const fetchProducts = createAsyncThunk<
-	Product[],
+	{ data: Product[]; curUser: string },
 	void,
 	{ rejectValue: string }
 >(
 	"product/fetchProducts", // @ts-ignore
 	async (payload, thunkAPI) => {
+		const rootState = thunkAPI.getState() as RootState;
+
 		try {
 			const respReq = await fetch(
 				"https://rnts-shop-default-rtdb.firebaseio.com/products.json"
@@ -69,11 +72,13 @@ const fetchProducts = createAsyncThunk<
 				transformedData.push({
 					id,
 					...resp[id],
-					ownerId: "u1",
 				});
 			}
 
-			return thunkAPI.fulfillWithValue(transformedData);
+			return thunkAPI.fulfillWithValue({
+				data: transformedData,
+				curUser: rootState.auth.data.userID,
+			});
 		} catch (e: any) {
 			return thunkAPI.rejectWithValue(e.message);
 		}
@@ -99,6 +104,7 @@ const updateProduct = createAsyncThunk<
 					title: payload.title,
 					description: payload.description,
 					imageUrl: payload.imageUrl,
+					ownerId: rootState.auth.data.userID,
 				}),
 			}
 		);
@@ -113,7 +119,7 @@ const updateProduct = createAsyncThunk<
 
 		return thunkAPI.fulfillWithValue({
 			...payload,
-			ownerId: "u1",
+			ownerId: rootState.auth.data.userID,
 		});
 	} catch (e: any) {
 		return thunkAPI.rejectWithValue(e.message);
@@ -167,9 +173,9 @@ const productSlice = createSlice({
 				state.isLoading = true;
 			})
 			.addCase(fetchProducts.fulfilled, (state, action) => {
-				state.availableProducts = action.payload;
-				state.userProducts = action.payload.filter(
-					(prod) => prod.ownerId === "u1"
+				state.availableProducts = action.payload.data;
+				state.userProducts = action.payload.data.filter(
+					(prod) => prod.ownerId === action.payload.curUser
 				);
 				state.isLoading = false;
 				state.hasLoaded = true;

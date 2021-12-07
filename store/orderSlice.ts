@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { ICartItemArray } from "../models/cart-item";
 import { createOrder, IOrder } from "../models/order";
 import { cartActions } from "./cartSlice";
+import { RootState } from "./store";
 
 const initialState = {
 	orders: [] as IOrder[],
@@ -14,10 +15,12 @@ const addOrder = createAsyncThunk<
 	{ items: ICartItemArray[]; amount: number },
 	{ rejectValue: any } // @ts-ignore
 >("order/createOrder", async (payload, thunkAPI) => {
+	const rootState = thunkAPI.getState() as RootState;
+
 	try {
 		const date = new Date();
 		const resp = await fetch(
-			"https://rnts-shop-default-rtdb.firebaseio.com/orders/u1.json",
+			`https://rnts-shop-default-rtdb.firebaseio.com/orders/${rootState.auth.data.userID}.json`,
 			{
 				method: "POST",
 				headers: {
@@ -32,11 +35,12 @@ const addOrder = createAsyncThunk<
 			}
 		);
 
+		const responseData = await resp.json();
 		if (!resp.ok) {
+			console.log(responseData);
+
 			return thunkAPI.rejectWithValue("Something went wrong...");
 		}
-
-		const responseData = await resp.json();
 
 		thunkAPI.dispatch(cartActions.clearCart());
 
@@ -53,9 +57,11 @@ const fetchOrders = createAsyncThunk<
 	void,
 	{ rejectValue: any } // @ts-ignore
 >("order/fetchOrders", async (payload, thunkAPI) => {
+	const rootState = thunkAPI.getState() as RootState;
+
 	try {
 		const resp = await fetch(
-			"https://rnts-shop-default-rtdb.firebaseio.com/orders/u1.json"
+			`https://rnts-shop-default-rtdb.firebaseio.com/orders/${rootState.auth.data.userID}.json`
 		);
 
 		if (!resp.ok) {

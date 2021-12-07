@@ -29,7 +29,7 @@ const signup = createAsyncThunk<
 
 		return thunkAPI.fulfillWithValue({
 			token: resData.idToken,
-			userId: resData.localId,
+			userID: resData.localId,
 		});
 	} catch (e: any) {
 		return thunkAPI.rejectWithValue(e.message);
@@ -65,7 +65,7 @@ const login = createAsyncThunk<
 
 		return thunkAPI.fulfillWithValue({
 			token: resData.idToken,
-			userId: resData.localId,
+			userID: resData.localId,
 		});
 	} catch (e: any) {
 		return thunkAPI.rejectWithValue(e.message);

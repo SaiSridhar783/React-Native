@@ -1,5 +1,11 @@
 import * as React from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import {
+	ActivityIndicator,
+	FlatList,
+	StyleSheet,
+	Text,
+	View,
+} from "react-native";
 import OrderItem from "../../components/shop/OrderItem";
 import Colors from "../../constants/Colors";
 import { orderActions } from "../../store/orderSlice";
@@ -21,6 +27,22 @@ const OrdersScreen: React.FC<IOrdersScreenProps> = (props) => {
 		return (
 			<View style={styles.centered}>
 				<ActivityIndicator size="large" color={Colors.primary} />
+			</View>
+		);
+	}
+
+	if (orders.length === 0) {
+		return (
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<Text>
+					No Orders Found, maybe it's time for your first order?
+				</Text>
 			</View>
 		);
 	}
