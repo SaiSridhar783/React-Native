@@ -25,12 +25,17 @@ const StartupScreen: React.FC<
 			const { token, userID, expiryDate } = transformedData;
 			const expirationDate = new Date(expiryDate);
 
-			if (expirationDate <= expiryDate || !token || !userID) {
+			if (expirationDate <= new Date() || !token || !userID) {
 				props.navigation.navigate("Login");
 				return;
 			}
 
-			dispatch(authActions.saveCreds({ token, userID }));
+			dispatch(
+				authActions.saveCreds({
+					main: { token, userID },
+					expiryTime: expirationDate.getTime() - new Date().getTime(),
+				})
+			);
 		};
 		tryLogin();
 	}, []);

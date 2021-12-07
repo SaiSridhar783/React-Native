@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import creds from "../config.json";
 
+let timer: any;
+
 const signup = createAsyncThunk<
 	any,
 	{ email: string; password: string },
@@ -37,6 +39,11 @@ const signup = createAsyncThunk<
 			new Date().getTime() + +resData.expiresIn * 1000
 		);
 
+		thunkAPI.dispatch(
+			authActions.setLogoutTimer(
+				expirationDate.getTime() - new Date().getTime()
+			)
+		);
 		saveDataToStorage(payloadDatum, expirationDate);
 		return thunkAPI.fulfillWithValue(payloadDatum);
 	} catch (e: any) {
@@ -80,6 +87,11 @@ const login = createAsyncThunk<
 			new Date().getTime() + +resData.expiresIn * 1000
 		);
 
+		thunkAPI.dispatch(
+			authActions.setLogoutTimer(
+				expirationDate.getTime() - new Date().getTime()
+			)
+		);
 		saveDataToStorage(payloadDatum, expirationDate);
 		return thunkAPI.fulfillWithValue(payloadDatum);
 	} catch (e: any) {
@@ -94,6 +106,29 @@ function saveDataToStorage(payload: any, expirationDate: Date) {
 	);
 }
 
+const setLogoutTimer = createAsyncThunk(
+	"auth/autoLogout",
+	(payload: number, thunkAPI) => {
+		timer = setTimeout(() => {
+			thunkAPI.dispatch(authActions.logout());
+		}, payload);
+	}
+);
+
+const saveCreds = createAsyncThunk(
+	"auth/saveCreds",
+	(payload: any, thunkAPI) => {
+		thunkAPI.dispatch(authActions.setLogoutTimer(payload.expiryTime));
+
+		return thunkAPI.fulfillWithValue(payload.main);
+	}
+);
+
+const logout = createAsyncThunk("auth/logout", () => {
+	if (timer) clearTimeout(timer);
+	AsyncStorage.removeItem("userData");
+});
+
 const initialState = {
 	isLoading: false,
 	error: null as null | string,
@@ -103,14 +138,7 @@ const initialState = {
 const authSlice = createSlice({
 	name: "auth",
 	initialState,
-	reducers: {
-		logout: (state) => {
-			state.data = { token: "", userID: "" };
-		},
-		saveCreds: (state, action) => {
-			state.data = action.payload;
-		},
-	},
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
 			.addCase(signup.pending, (state) => {
@@ -138,9 +166,22 @@ const authSlice = createSlice({
 			.addCase(login.rejected, (state, action) => {
 				state.isLoading = false;
 				state.error = action.payload;
+			})
+			.addCase(saveCreds.fulfilled, (state, action) => {
+				state.data = action.payload;
+			})
+			.addCase(logout.fulfilled, (state, action) => {
+				state.data.token = "";
+				state.data.userID = "";
 			});
 	},
 });
 
 export const authReducer = authSlice.reducer;
-export const authActions = { ...authSlice.actions, signup, login };
+export const authActions = {
+	logout,
+	login,
+	signup,
+	setLogoutTimer,
+	saveCreds,
+};
