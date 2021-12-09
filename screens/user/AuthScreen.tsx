@@ -12,7 +12,7 @@ import {
 import Card from "../../components/UI/Card";
 import Input from "../../components/UI/Input";
 import Colors from "../../constants/Colors";
-import { ERRORS, ERRORS_MAP } from "../../constants/errors";
+import ERRORS from "../../constants/errors.json";
 import useFormReducer from "../../hooks/useFormReducer";
 import { authActions } from "../../store/authSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
@@ -53,12 +53,13 @@ const AuthScreen: React.FC<IAuthScreenProps> = (props) => {
 	React.useEffect(() => {
 		if (error) {
 			Alert.alert(
-				ERRORS_MAP[error]
-					?.replaceAll("-", " ")
+				// @ts-ignore
+				ERRORS[error]?.title
+					?.replace(/([a-z]{1})(\-)([a-z]{1})/g, "$1 $3")
 					?.replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) =>
 						letter.toUpperCase()
-					),
-				ERRORS[ERRORS_MAP[error]]
+					), // @ts-ignore
+				ERRORS[error]?.message
 			);
 		}
 	}, [error]);
@@ -66,7 +67,7 @@ const AuthScreen: React.FC<IAuthScreenProps> = (props) => {
 	return (
 		<View style={styles.screen}>
 			<LinearGradient
-				colors={["#ffdeff", "#fdf1af"]}
+				colors={["#b4b3ff", "#c6d7ff"]}
 				style={styles.gradient}
 			>
 				<Card style={{ ...styles.authContainer }}>
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
 		maxHeight: 400,
 		padding: 20,
 		borderRadius: 5,
-		backgroundColor: "whitesmoke",
+		backgroundColor: "#e7e2ff",
 	},
 	screen: {
 		flex: 1,
