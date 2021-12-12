@@ -2,16 +2,14 @@ import * as React from "react";
 import { View, Text, Button, Image, StyleSheet, Alert } from "react-native";
 import Colors from "../constants/Colors";
 import * as ImagePickerAPI from "expo-image-picker";
-import * as PermissionsAPI from "expo-permissions";
 
-interface IImagePickerProps {}
+interface IImagePickerProps {
+	onImageTaken: (uri: string) => void;
+}
 
 const ImagePicker: React.FC<IImagePickerProps> = (props) => {
 	const verifyPermissions = async () => {
-		const result = await PermissionsAPI.askAsync(
-			PermissionsAPI.CAMERA,
-			PermissionsAPI.MEDIA_LIBRARY
-		);
+		const result = await ImagePickerAPI.getCameraPermissionsAsync();
 		if (result.status !== "granted") {
 			Alert.alert(
 				"Insufficient permissions!",
@@ -23,18 +21,30 @@ const ImagePicker: React.FC<IImagePickerProps> = (props) => {
 		return true;
 	};
 
+	const [pickedImage, setPickedImage] = React.useState("");
+
 	const takeImageHandler = async () => {
 		const hasPermission = await verifyPermissions();
-		if (!hasPermission) {
-			return;
+
+		const image = await ImagePickerAPI.launchCameraAsync({
+			allowsEditing: true,
+			aspect: [16, 9],
+			quality: 0.5,
+		});
+
+		if (!image.cancelled) {
+			setPickedImage(image.uri);
+			props.onImageTaken(image.uri);
 		}
-		ImagePickerAPI.launchCameraAsync();
 	};
 	return (
 		<View style={styles.imagePicker}>
 			<View style={styles.imagePreview}>
-				<Text>No Image Picked Yet.</Text>
-				<Image style={styles.image} source={{ uri: "vgdrth" }} />
+				{!pickedImage ? (
+					<Text>No Image Picked Yet.</Text>
+				) : (
+					<Image style={styles.image} source={{ uri: pickedImage }} />
+				)}
 			</View>
 			<Button
 				title="Take Image"

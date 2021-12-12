@@ -19,6 +19,7 @@ const NewPlaceScreen: React.FC<
 	INewPlaceScreenProps & RootStackScreenProps<"NewPlace">
 > = (props) => {
 	const [enteredTitle, setEnteredTitle] = React.useState("");
+	const [selectedImage, setSelectedImage] = React.useState("");
 	const dispatch = useReduxDispatch();
 
 	const titleChangeHandler = (text: string) => {
@@ -26,8 +27,17 @@ const NewPlaceScreen: React.FC<
 	};
 
 	const savePlaceHandler = () => {
-		dispatch(placesActions.addPlace({ title: enteredTitle }));
+		dispatch(
+			placesActions.addPlace({
+				title: enteredTitle,
+				image: selectedImage,
+			})
+		);
 		props.navigation.goBack();
+	};
+
+	const tookImageHandler = (imagePath: string) => {
+		setSelectedImage(imagePath);
 	};
 
 	return (
@@ -39,7 +49,7 @@ const NewPlaceScreen: React.FC<
 					onChangeText={titleChangeHandler}
 					value={enteredTitle}
 				/>
-				<ImagePicker />
+				<ImagePicker onImageTaken={tookImageHandler} />
 				<Button
 					title="Save Place"
 					color={Colors.primary}
