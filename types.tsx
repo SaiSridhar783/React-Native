@@ -1,7 +1,4 @@
-import {
-	CompositeScreenProps,
-	NavigatorScreenParams,
-} from "@react-navigation/native";
+import { NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 declare global {
@@ -11,16 +8,16 @@ declare global {
 }
 
 export type RootStackParamList = {
-	Places: NavigatorScreenParams<RootTabParamList> | undefined;
-	PlaceDetail: NavigatorScreenParams<RootTabParamList> | undefined;
-	NewPlace: NavigatorScreenParams<RootTabParamList> | undefined;
-	Map: NavigatorScreenParams<RootTabParamList> | undefined;
+	Places: NavigatorScreenParams<RootNavigateParamList> | undefined;
+	PlaceDetail: NavigatorScreenParams<RootNavigateParamList> | undefined;
+	NewPlace: NavigatorScreenParams<RootNavigateParamList> | undefined;
+	Map: NavigatorScreenParams<RootNavigateParamList> | undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 	NativeStackScreenProps<RootStackParamList, Screen>;
 
-export type RootTabParamList = {
-	TabOne: undefined;
-	TabTwo: undefined;
+export type RootNavigateParamList = {
+	PlaceDetail: { placeTitle: string; placeId: string };
+	Map: undefined;
 };
