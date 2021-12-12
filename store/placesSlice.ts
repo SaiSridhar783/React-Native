@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Place } from "../models/Place";
 import * as FileSystemAPI from "expo-file-system";
+import { insertPlace } from "../helpers/db";
 
 const initialState = { places: [] as Place[] };
 
@@ -14,17 +15,28 @@ const addPlace = createAsyncThunk<Place, any, { rejectValue: any }>(
 				from: payload.image,
 				to: newPath,
 			});
+
+			const dbResult: any = await insertPlace(
+				payload.title,
+				newPath,
+				"afsgthyjghgtr",
+				42.38,
+				69.14
+				/* payload.address,
+				payload.lat,
+				payload.lng */
+			);
+
+			const newPlace = new Place(
+				dbResult.insertId.toString(),
+				payload.title,
+				newPath
+			);
+
+			return newPlace;
 		} catch (e) {
 			return thunkAPI.rejectWithValue(e);
 		}
-
-		const newPlace = new Place(
-			new Date().toISOString(),
-			payload.title,
-			newPath
-		);
-
-		return newPlace;
 	}
 );
 
