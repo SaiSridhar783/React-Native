@@ -7,6 +7,7 @@ import {
 	ScrollView,
 	Button,
 } from "react-native";
+import ImagePicker from "../components/ImagePicker";
 import Colors from "../constants/Colors";
 import { placesActions } from "../store/placesSlice";
 import { useReduxDispatch } from "../store/store";
@@ -38,6 +39,7 @@ const NewPlaceScreen: React.FC<
 					onChangeText={titleChangeHandler}
 					value={enteredTitle}
 				/>
+				<ImagePicker />
 				<Button
 					title="Save Place"
 					color={Colors.primary}
