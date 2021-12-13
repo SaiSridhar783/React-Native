@@ -27,5 +27,8 @@ export type RootNavigateParamList = {
 	NewPlace: {
 		coordinates: Icoordinates;
 	};
-	Map: undefined;
+	Map: {
+		readonly?: boolean;
+		initialLocation?: Icoordinates;
+	};
 };

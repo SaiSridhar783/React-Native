@@ -23,6 +23,21 @@ const PlaceDetailScreen: React.FC<
 		});
 		return () => {};
 	}, []);
+
+	const showMapHandler = () => {
+		//@ts-ignore
+		props.navigation.navigate("Map", {
+			screen: "Map",
+			params: {
+				readonly: true,
+				initialLocation: {
+					latitude: selectedPlace!.coords.lat,
+					longitude: selectedPlace!.coords.lng,
+				},
+			},
+		});
+	};
+
 	return (
 		<ScrollView contentContainerStyle={{ alignItems: "center" }}>
 			<Image
@@ -36,6 +51,7 @@ const PlaceDetailScreen: React.FC<
 				<MapPreview
 					style={styles.mapPreview}
 					location={selectedPlace!.coords}
+					onPress={showMapHandler}
 				/>
 			</View>
 		</ScrollView>

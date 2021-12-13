@@ -10,16 +10,25 @@ interface IMapScreenProps {}
 const MapScreen: React.FC<IMapScreenProps & RootStackScreenProps<"Map">> = (
 	props
 ) => {
-	const [selectedLocation, setSelectedLocation] =
-		React.useState<LatLng | null>(null);
+	// @ts-ignore
+	const initialLocation = props.route.params?.params?.initialLocation;
+	// @ts-ignore
+	const readonly = props.route.params?.params?.readonly;
+	const [selectedLocation, setSelectedLocation] = React.useState<
+		LatLng | undefined
+	>(initialLocation);
+
 	const mapRegion = {
-		latitude: 37.78825,
-		longitude: -122.4324,
+		latitude: initialLocation ? initialLocation.latitude : 12.9716,
+		longitude: initialLocation ? initialLocation.longitude : 77.5946,
 		latitudeDelta: 0.0922,
 		longitudeDelta: 0.0421,
 	};
 
 	const selectLocationHandler = (event: MapEvent) => {
+		if (readonly) {
+			return;
+		}
 		setSelectedLocation(event.nativeEvent.coordinate);
 	};
 
@@ -45,14 +54,15 @@ const MapScreen: React.FC<IMapScreenProps & RootStackScreenProps<"Map">> = (
 
 	React.useEffect(() => {
 		props.navigation.setOptions({
-			headerRight: () => (
-				<TouchableOpacity
-					style={styles.headerButton}
-					onPress={savePickedLocationHandler}
-				>
-					<Text style={styles.headerButtonText}>Save</Text>
-				</TouchableOpacity>
-			),
+			headerRight: () =>
+				readonly ? null : (
+					<TouchableOpacity
+						style={styles.headerButton}
+						onPress={savePickedLocationHandler}
+					>
+						<Text style={styles.headerButtonText}>Save</Text>
+					</TouchableOpacity>
+				),
 		});
 	}, [savePickedLocationHandler]);
 
