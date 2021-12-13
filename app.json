@@ -1,14 +1,14 @@
 {
 	"expo": {
-		"name": "great-places",
+		"name": "Great Places",
 		"slug": "great-places",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/images/icon.png",
 		"splash": {
 			"image": "./assets/images/splash.png",
-			"resizeMode": "cover",
-			"backgroundColor": "#ffffff"
+			"resizeMode": "contain",
+			"backgroundColor": "#00bcd4"
 		},
 		"updates": {
 			"fallbackToCacheTimeout": 0
@@ -21,7 +21,14 @@
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/images/adaptive-icon.png",
 				"backgroundColor": "#FFFFFF"
-			}
+			},
+			"permissions": [
+				"ACCESS_FINE_LOCATION",
+				"CAMERA",
+				"WRITE_EXTERNAL_STORAGE"
+			],
+			"package": "com.shadow_killer.great_places",
+			"versionCode": 1
 		},
 		"web": {
 			"favicon": "./assets/images/favicon.png"
