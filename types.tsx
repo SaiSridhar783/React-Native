@@ -22,7 +22,7 @@ export type RootNavigateParamList = {
 	PlaceDetail: {
 		placeTitle: string;
 		placeId: string;
-		coordinates: Icoordinates;
+		coordinates?: Icoordinates;
 	};
 	NewPlace: {
 		coordinates: Icoordinates;

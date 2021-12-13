@@ -14,9 +14,13 @@ import MapPreview from "./MapPreview";
 interface ILocationPickerProps {
 	navigation: any;
 	route: any;
+	onLocationPicked: (location: any) => void;
 }
 
-const LocationPicker: React.FC<ILocationPickerProps> = (props) => {
+const LocationPicker: React.FC<ILocationPickerProps> = ({
+	onLocationPicked,
+	...props
+}) => {
 	const [isFetching, setIsFetching] = React.useState(false);
 	const [chosenLocation, setChosenLocation] = React.useState({});
 
@@ -25,9 +29,13 @@ const LocationPicker: React.FC<ILocationPickerProps> = (props) => {
 	React.useEffect(() => {
 		if (coords) {
 			setChosenLocation({ lat: coords.latitude, lng: coords.longitude });
+			onLocationPicked({
+				lat: coords.latitude,
+				lng: coords.longitude,
+			});
 			setIsFetching(false);
 		}
-	}, [coords]);
+	}, [coords, onLocationPicked]);
 
 	const verifyPermissions = async () => {
 		const result = await LocationAPI.getForegroundPermissionsAsync();
@@ -62,10 +70,12 @@ const LocationPicker: React.FC<ILocationPickerProps> = (props) => {
 					timeInterval: 5000,
 				});
 
-			setChosenLocation({
+			const newLoc = {
 				lat: location.coords.latitude,
 				lng: location.coords.longitude,
-			});
+			};
+			setChosenLocation(newLoc);
+			onLocationPicked(newLoc);
 		} catch (err) {
 			Alert.alert(
 				"Could not fetch location!",

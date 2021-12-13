@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Place } from "../models/Place";
 import * as FileSystemAPI from "expo-file-system";
 import { fetchPlaces, insertPlace } from "../helpers/db";
+import config from "../config";
 
 const initialState = { places: [] as Place[] };
 
@@ -11,6 +12,17 @@ const addPlace = createAsyncThunk<Place, any, { rejectValue: any }>(
 		const fileName = payload.image.split("/").pop() as string;
 		const newPath = FileSystemAPI.documentDirectory + fileName;
 		try {
+			const response = await fetch(
+				`https://api.mapbox.com/geocoding/v5/mapbox.places/${payload.location.lng},${payload.location.lat}.json?access_token=${config.MAPBOX_API}`
+			);
+
+			if (!response.ok) {
+				return thunkAPI.rejectWithValue("Something went wrong...");
+			}
+
+			const resData = await response.json();
+			const address = resData.features[0].place_name;
+
 			await FileSystemAPI.moveAsync({
 				from: payload.image,
 				to: newPath,
@@ -19,18 +31,17 @@ const addPlace = createAsyncThunk<Place, any, { rejectValue: any }>(
 			const dbResult: any = await insertPlace(
 				payload.title,
 				newPath,
-				"afsgthyjghgtr",
-				42.38,
-				69.14
-				/* payload.address,
-				payload.lat,
-				payload.lng */
+				address,
+				payload.location.lat,
+				payload.location.lng
 			);
 
 			const newPlace = new Place(
 				dbResult.insertId.toString(),
 				payload.title,
-				newPath
+				newPath,
+				address,
+				payload.location
 			);
 
 			return newPlace;
@@ -68,7 +79,9 @@ const placesSlice = createSlice({
 						new Place(
 							place.id.toString(),
 							place.title,
-							place.imageUri
+							place.imageUri,
+							place.address,
+							place.coords
 						)
 				);
 			});

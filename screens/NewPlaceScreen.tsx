@@ -21,6 +21,7 @@ const NewPlaceScreen: React.FC<
 > = (props) => {
 	const [enteredTitle, setEnteredTitle] = React.useState("");
 	const [selectedImage, setSelectedImage] = React.useState("");
+	const [selectedLocation, setSelectedLocation] = React.useState({});
 	const dispatch = useReduxDispatch();
 
 	const titleChangeHandler = (text: string) => {
@@ -32,6 +33,7 @@ const NewPlaceScreen: React.FC<
 			placesActions.addPlace({
 				title: enteredTitle,
 				image: selectedImage,
+				location: selectedLocation,
 			})
 		);
 		props.navigation.goBack();
@@ -40,6 +42,10 @@ const NewPlaceScreen: React.FC<
 	const tookImageHandler = (imagePath: string) => {
 		setSelectedImage(imagePath);
 	};
+
+	const locationPickedHandler = React.useCallback((location: any) => {
+		setSelectedLocation(location);
+	}, []);
 
 	return (
 		<ScrollView>
@@ -54,6 +60,7 @@ const NewPlaceScreen: React.FC<
 				<LocationPicker
 					navigation={props.navigation}
 					route={props.route}
+					onLocationPicked={locationPickedHandler}
 				/>
 				<Button
 					title="Save Place"
