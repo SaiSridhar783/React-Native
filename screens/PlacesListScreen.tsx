@@ -10,6 +10,7 @@ interface IPlacesListScreenProps {}
 const PlacesListScreen: React.FC<
 	IPlacesListScreenProps & RootStackScreenProps<"Places">
 > = (props) => {
+	const [isRefreshing, setIsRefreshing] = React.useState(false);
 	const places = useReduxSelector((state) => state.place);
 	const dispatch = useReduxDispatch();
 
@@ -19,9 +20,16 @@ const PlacesListScreen: React.FC<
 
 	return (
 		<FlatList
+			onRefresh={async () => {
+				setIsRefreshing(true);
+				await dispatch(placesActions.fetchPlace());
+				setIsRefreshing(false);
+			}}
+			refreshing={isRefreshing}
 			data={places.places}
 			renderItem={(itemData) => (
 				<PlaceItem
+					id={+itemData.item.id}
 					image={itemData.item.imageUri}
 					address={itemData.item.address}
 					title={itemData.item.title}

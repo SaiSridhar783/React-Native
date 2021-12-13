@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Place } from "../models/Place";
 import * as FileSystemAPI from "expo-file-system";
-import { fetchPlaces, insertPlace } from "../helpers/db";
+import { deleteAPlace, fetchPlaces, insertPlace } from "../helpers/db";
 import config from "../config";
+import { RootState } from "./store";
 
-const initialState = { places: [] as Place[] };
+const initialState = { places: [] as Place[], loading: false };
 
 const addPlace = createAsyncThunk<Place, any, { rejectValue: any }>(
 	"places/addPlace",
@@ -64,6 +65,23 @@ const fetchPlace = createAsyncThunk<Place[], void>(
 	}
 );
 
+const deletePlace = createAsyncThunk<number, number>(
+	"places/deletePlace", // @ts-ignore
+	async (id, thunkAPI) => {
+		try {
+			const rootState = thunkAPI.getState() as RootState;
+			await deleteAPlace(id);
+			await FileSystemAPI.deleteAsync(
+				rootState.place.places.find((p) => +p.id === id)!.imageUri
+			);
+
+			return thunkAPI.fulfillWithValue(id);
+		} catch (e) {
+			return thunkAPI.rejectWithValue(e);
+		}
+	}
+);
+
 const placesSlice = createSlice({
 	name: "places",
 	initialState: initialState,
@@ -73,9 +91,10 @@ const placesSlice = createSlice({
 			.addCase(addPlace.fulfilled, (state, action) => {
 				state.places.push(action.payload);
 			})
+			.addCase(fetchPlace.pending, (state) => {
+				state.loading = true;
+			})
 			.addCase(fetchPlace.fulfilled, (state, action) => {
-				console.log(action.payload);
-
 				state.places = action.payload.map(
 					(place) =>
 						new Place(
@@ -86,9 +105,15 @@ const placesSlice = createSlice({
 							{ lat: place.lat, lng: place.lng }
 						)
 				);
+				state.loading = false;
+			})
+			.addCase(deletePlace.fulfilled, (state, action) => {
+				state.places = state.places.filter(
+					(p) => +p.id !== action.payload
+				);
 			});
 	},
 });
 
 export const placesReducer = placesSlice.reducer;
-export const placesActions = { addPlace, fetchPlace };
+export const placesActions = { addPlace, fetchPlace, deletePlace };

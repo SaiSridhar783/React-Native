@@ -5,17 +5,26 @@ import {
 	StyleSheet,
 	TouchableNativeFeedback,
 	Image,
+	TouchableOpacity,
 } from "react-native";
 import Colors from "../constants/Colors";
+import { FontAwesome } from "@expo/vector-icons";
+import { useReduxDispatch } from "../store/store";
+import { placesActions } from "../store/placesSlice";
 
 interface IPlaceItemProps {
 	image: string;
 	title: string;
 	address: string;
 	onSelect: () => void;
+	id: number;
 }
 
 const PlaceItem: React.FC<IPlaceItemProps> = (props) => {
+	const dispatch = useReduxDispatch();
+	const deletePlaceHandler = () => {
+		dispatch(placesActions.deletePlace(props.id));
+	};
 	return (
 		<TouchableNativeFeedback onPress={props.onSelect}>
 			<View style={styles.placeItem}>
@@ -24,6 +33,13 @@ const PlaceItem: React.FC<IPlaceItemProps> = (props) => {
 					<Text style={styles.title}>{props.title}</Text>
 					<Text style={styles.address}>{props.address}</Text>
 				</View>
+				<TouchableOpacity onPress={deletePlaceHandler}>
+					<FontAwesome
+						name="trash-o"
+						size={23}
+						style={styles.deleteIcon}
+					/>
+				</TouchableOpacity>
 			</View>
 		</TouchableNativeFeedback>
 	);
@@ -60,6 +76,9 @@ const styles = StyleSheet.create({
 	address: {
 		color: "#666",
 		fontSize: 16,
+	},
+	deleteIcon: {
+		marginRight: "15%",
 	},
 });
 

@@ -72,3 +72,22 @@ export const fetchPlaces = () => {
 
 	return promise;
 };
+
+export const deleteAPlace = (id: number) => {
+	const promise = new Promise((resolve, reject) => {
+		db.transaction((tx) => {
+			tx.executeSql(
+				`DELETE FROM places WHERE id=?;`,
+				[id],
+				(_, result) => {
+					resolve(result);
+				}, // @ts-ignore
+				(_, err) => {
+					reject(err);
+				}
+			);
+		});
+	});
+
+	return promise;
+};
