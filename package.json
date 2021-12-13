@@ -16,6 +16,7 @@
     "expo": "~43.0.2",
     "expo-file-system": "~13.0.3",
     "expo-image-picker": "~11.0.3",
+    "expo-location": "~13.0.4",
     "expo-permissions": "~13.0.3",
     "expo-splash-screen": "~0.13.5",
     "expo-sqlite": "~10.0.3",

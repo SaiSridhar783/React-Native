@@ -14,7 +14,14 @@ const ImagePicker: React.FC<IImagePickerProps> = (props) => {
 			Alert.alert(
 				"Insufficient permissions!",
 				"You need to grant camera permissions to use this app.",
-				[{ text: "Okay" }]
+				[
+					{
+						text: "Okay",
+						onPress: async () => {
+							await ImagePickerAPI.requestCameraPermissionsAsync();
+						},
+					},
+				]
 			);
 			return false;
 		}
@@ -25,6 +32,10 @@ const ImagePicker: React.FC<IImagePickerProps> = (props) => {
 
 	const takeImageHandler = async () => {
 		const hasPermission = await verifyPermissions();
+
+		if (!hasPermission) {
+			return;
+		}
 
 		const image = await ImagePickerAPI.launchCameraAsync({
 			allowsEditing: true,

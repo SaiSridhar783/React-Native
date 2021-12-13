@@ -8,6 +8,7 @@ import {
 	Button,
 } from "react-native";
 import ImagePicker from "../components/ImagePicker";
+import LocationPicker from "../components/LocationPicker";
 import Colors from "../constants/Colors";
 import { placesActions } from "../store/placesSlice";
 import { useReduxDispatch } from "../store/store";
@@ -50,6 +51,7 @@ const NewPlaceScreen: React.FC<
 					value={enteredTitle}
 				/>
 				<ImagePicker onImageTaken={tookImageHandler} />
+				<LocationPicker />
 				<Button
 					title="Save Place"
 					color={Colors.primary}
