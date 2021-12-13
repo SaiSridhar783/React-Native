@@ -11,11 +11,23 @@ import Colors from "../constants/Colors";
 import * as LocationAPI from "expo-location";
 import MapPreview from "./MapPreview";
 
-interface ILocationPickerProps {}
+interface ILocationPickerProps {
+	navigation: any;
+	route: any;
+}
 
 const LocationPicker: React.FC<ILocationPickerProps> = (props) => {
 	const [isFetching, setIsFetching] = React.useState(false);
 	const [chosenLocation, setChosenLocation] = React.useState({});
+
+	const coords = props.route.params?.params?.coordinates;
+
+	React.useEffect(() => {
+		if (coords) {
+			setChosenLocation({ lat: coords.latitude, lng: coords.longitude });
+			setIsFetching(false);
+		}
+	}, [coords]);
 
 	const verifyPermissions = async () => {
 		const result = await LocationAPI.getForegroundPermissionsAsync();
@@ -64,20 +76,35 @@ const LocationPicker: React.FC<ILocationPickerProps> = (props) => {
 		setIsFetching(false);
 	};
 
+	const pickOnMapHandler = () => {
+		props.navigation.navigate("Map");
+	};
+
 	return (
 		<View style={styles.locationPicker}>
-			<MapPreview style={styles.mapPreview} location={chosenLocation}>
+			<MapPreview
+				style={styles.mapPreview}
+				location={chosenLocation}
+				onPress={pickOnMapHandler}
+			>
 				{isFetching ? (
 					<ActivityIndicator size="large" color={Colors.primary} />
 				) : (
 					<Text>No Location Picked yet</Text>
 				)}
 			</MapPreview>
-			<Button
-				title="Get User Location"
-				color={Colors.primary}
-				onPress={getLocationHandler}
-			/>
+			<View style={styles.actions}>
+				<Button
+					title="Get User Location"
+					color={Colors.primary}
+					onPress={getLocationHandler}
+				/>
+				<Button
+					title="Pick on Map"
+					color={Colors.primary}
+					onPress={pickOnMapHandler}
+				/>
+			</View>
 		</View>
 	);
 };
@@ -95,6 +122,11 @@ const styles = StyleSheet.create({
 		borderColor: "#ccc",
 		borderWidth: 1,
 		borderRadius: 10,
+	},
+	actions: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+		width: "100%",
 	},
 });
 

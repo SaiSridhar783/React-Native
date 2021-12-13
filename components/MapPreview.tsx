@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, TouchableNativeFeedback } from "react-native";
 import config from "../config";
 
 interface IMapPreviewProps {
@@ -8,6 +8,7 @@ interface IMapPreviewProps {
 		lat?: number;
 	};
 	style: object;
+	onPress: () => void;
 }
 
 const MapPreview: React.FC<IMapPreviewProps> = (props) => {
@@ -18,16 +19,18 @@ const MapPreview: React.FC<IMapPreviewProps> = (props) => {
 	}
 
 	return (
-		<View style={{ ...styles.mapPreview, ...props.style }}>
-			{props.location.lat ? (
-				<Image
-					style={styles.mapImage}
-					source={{ uri: imagePreviewUrl }}
-				/>
-			) : (
-				props.children
-			)}
-		</View>
+		<TouchableNativeFeedback onPress={props.onPress}>
+			<View style={{ ...styles.mapPreview, ...props.style }}>
+				{props.location.lat ? (
+					<Image
+						style={styles.mapImage}
+						source={{ uri: imagePreviewUrl }}
+					/>
+				) : (
+					props.children
+				)}
+			</View>
+		</TouchableNativeFeedback>
 	);
 };
 

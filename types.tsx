@@ -17,7 +17,15 @@ export type RootStackParamList = {
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
 	NativeStackScreenProps<RootStackParamList, Screen>;
 
+type Icoordinates = { latitude: number; longitude: number };
 export type RootNavigateParamList = {
-	PlaceDetail: { placeTitle: string; placeId: string };
+	PlaceDetail: {
+		placeTitle: string;
+		placeId: string;
+		coordinates: Icoordinates;
+	};
+	NewPlace: {
+		coordinates: Icoordinates;
+	};
 	Map: undefined;
 };

@@ -51,10 +51,13 @@ const NewPlaceScreen: React.FC<
 					value={enteredTitle}
 				/>
 				<ImagePicker onImageTaken={tookImageHandler} />
-				<LocationPicker />
+				<LocationPicker
+					navigation={props.navigation}
+					route={props.route}
+				/>
 				<Button
 					title="Save Place"
-					color={Colors.primary}
+					color={Colors.tint}
 					onPress={savePlaceHandler}
 				/>
 			</View>
