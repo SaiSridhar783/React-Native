@@ -4,6 +4,6 @@ export class Place {
 		public title: string,
 		public imageUri: string,
 		public address: string,
-		public coords: { lat: number; lng: number }
+		public coords: { lat?: number; lng?: number }
 	) {}
 }

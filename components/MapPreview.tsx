@@ -7,8 +7,8 @@ interface IMapPreviewProps {
 		lng?: number;
 		lat?: number;
 	};
-	style: object;
-	onPress: () => void;
+	style?: object;
+	onPress?: () => void;
 }
 
 const MapPreview: React.FC<IMapPreviewProps> = (props) => {

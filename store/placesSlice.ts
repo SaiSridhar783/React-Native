@@ -74,14 +74,16 @@ const placesSlice = createSlice({
 				state.places.push(action.payload);
 			})
 			.addCase(fetchPlace.fulfilled, (state, action) => {
+				console.log(action.payload);
+
 				state.places = action.payload.map(
 					(place) =>
 						new Place(
 							place.id.toString(),
 							place.title,
 							place.imageUri,
-							place.address,
-							place.coords
+							place.address, //@ts-ignore
+							{ lat: place.lat, lng: place.lng }
 						)
 				);
 			});
