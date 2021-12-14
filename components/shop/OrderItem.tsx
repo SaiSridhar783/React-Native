@@ -1,3 +1,4 @@
+import moment from "moment";
 import * as React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import Colors from "../../constants/Colors";
@@ -7,7 +8,7 @@ import CartItem from "./CartItem";
 
 interface IOrderItemProps {
 	amount: number;
-	date: string;
+	date: Date;
 	items: ICartItemArray[];
 }
 
@@ -20,7 +21,9 @@ const OrderItem: React.FC<IOrderItemProps> = (props) => {
 				<Text style={styles.totalAmount}>
 					${props.amount.toFixed(2)}
 				</Text>
-				<Text style={styles.date}>{props.date}</Text>
+				<Text style={styles.date}>
+					{moment(props.date).format("MMMM Do YYYY, h:mm a")}
+				</Text>
 			</View>
 			<View style={styles.buttonContainer}>
 				<Button

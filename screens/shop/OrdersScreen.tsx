@@ -60,7 +60,7 @@ const OrdersScreen: React.FC<IOrdersScreenProps> = (props) => {
 			renderItem={(itemData) => (
 				<OrderItem
 					amount={itemData.item.totalAmount}
-					date={itemData.item.readableDate}
+					date={itemData.item.date}
 					items={itemData.item.items}
 				/>
 			)}

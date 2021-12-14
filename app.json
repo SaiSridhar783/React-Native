@@ -25,7 +25,8 @@
 				"backgroundColor": "#00ffff"
 			},
 			"package": "com.shadow.shop",
-			"useNextNotificationsApi": true
+			"useNextNotificationsApi": true,
+			"googleServicesFile": "./google-services.json"
 		},
 		"web": {
 			"favicon": "./assets/images/favicon.png"

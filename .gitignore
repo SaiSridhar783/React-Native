@@ -10,6 +10,6 @@ npm-debug.*
 *.orig.*
 web-build/
 config.json
-
+google*
 # macOS
 .DS_Store
