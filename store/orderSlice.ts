@@ -56,8 +56,8 @@ const addOrder = createAsyncThunk<
 				},
 				body: JSON.stringify({
 					to: pushToken,
-					title: "Order Was Placed!",
-					body: `${cartItem.productTitle} - Quantity of ${cartItem.quantity}`,
+					title: `${cartItem.productTitle} Was Ordered!`,
+					body: `Total Sale: ${cartItem.quantity} x ${cartItem.productPrice}`,
 				}),
 			})
 				.then((resp) => resp.json())

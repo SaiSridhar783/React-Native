@@ -21,6 +21,7 @@ interface IProductsOverviewScreenProps {}
 const ProductsOverviewScreen: React.FC<
 	IProductsOverviewScreenProps & RootStackScreenProps<"ProductsOverview">
 > = (props) => {
+	const cartItemCount = useReduxSelector((state) => state.cart.itemCount);
 	const products = useReduxSelector((state) => state.product);
 	const dispatch = useReduxDispatch();
 
@@ -29,7 +30,8 @@ const ProductsOverviewScreen: React.FC<
 			headerRight: () => (
 				<HeaderButtons HeaderButtonComponent={HeaderButton}>
 					<Item
-						title="Cart"
+						title="Cart" // @ts-ignore
+						count={cartItemCount.toString()}
 						iconName="shopping-cart"
 						onPress={() => {
 							props.navigation.navigate("Cart");
@@ -42,7 +44,9 @@ const ProductsOverviewScreen: React.FC<
 		/* props.navigation.addListener("focus", () => {
 			dispatch(productActions.fetchProducts());
 		}); */
+	}, [cartItemCount]);
 
+	React.useEffect(() => {
 		dispatch(productActions.fetchProducts());
 	}, []);
 

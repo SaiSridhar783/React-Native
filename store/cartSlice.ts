@@ -5,6 +5,7 @@ import { Product } from "../models/product";
 const initialState = {
 	items: {} as { [id: string]: ICartItem },
 	totalAmount: 0,
+	itemCount: 0,
 };
 
 const cartSlice = createSlice({
@@ -31,6 +32,7 @@ const cartSlice = createSlice({
 				);
 				state.totalAmount += productPrice;
 			}
+			state.itemCount += 1;
 		},
 		removeProduct: (state, action: { type: string; payload: string }) => {
 			const pid = action.payload;
@@ -43,10 +45,12 @@ const cartSlice = createSlice({
 				state.totalAmount -= state.items[pid].sum;
 				delete state.items[pid];
 			}
+			state.itemCount -= 1;
 		},
 		clearCart: (state) => {
 			state.items = {};
 			state.totalAmount = 0;
+			state.itemCount = 0;
 		},
 		deleteHelper: (state, action) => {
 			try {
