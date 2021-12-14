@@ -9,8 +9,8 @@
 		"userInterfaceStyle": "automatic",
 		"splash": {
 			"image": "./assets/images/splash.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
+			"resizeMode": "cover",
+			"backgroundColor": "#00ffff"
 		},
 		"updates": {
 			"fallbackToCacheTimeout": 5000
@@ -22,7 +22,7 @@
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/images/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
+				"backgroundColor": "#00ffff"
 			},
 			"package": "com.shadow.shop",
 			"useNextNotificationsApi": true
