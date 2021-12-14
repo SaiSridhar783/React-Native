@@ -15,10 +15,12 @@ const cartSlice = createSlice({
 			const addedProduct = action.payload;
 			const productPrice = addedProduct.price;
 			const productTitle = addedProduct.title;
+			const pushToken = addedProduct.ownerPushToken;
 
 			if (state.items[addedProduct.id]) {
 				state.items[addedProduct.id].quantity += 1;
 				state.items[addedProduct.id].sum += productPrice;
+				state.items[addedProduct.id].pushToken = pushToken;
 				state.totalAmount += productPrice;
 			} else {
 				state.items[addedProduct.id] = createCartItem(

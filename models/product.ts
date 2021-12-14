@@ -5,6 +5,7 @@ export interface Product {
 	imageUrl: string;
 	description: string;
 	price: number;
+	ownerPushToken: string;
 }
 
 export function createProduct(
@@ -13,7 +14,8 @@ export function createProduct(
 	title: string,
 	imageUrl: string,
 	description: string,
-	price: number
+	price: number,
+	ownerPushToken: string
 ): Product {
 	return {
 		id,
@@ -22,5 +24,6 @@ export function createProduct(
 		imageUrl,
 		description,
 		price,
+		ownerPushToken,
 	};
 }
