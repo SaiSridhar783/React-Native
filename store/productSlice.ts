@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Product } from "../models/product";
 import { cartActions } from "./cartSlice";
 import { RootState } from "./store";
+import * as Notifications from "expo-notifications";
 
 const createProduct = createAsyncThunk<
 	Product,
@@ -10,6 +11,17 @@ const createProduct = createAsyncThunk<
 >("product/createProduct", async (payload, thunkAPI) => {
 	const rootState = thunkAPI.getState() as RootState;
 	try {
+		let pushToken;
+		let statusObj = await Notifications.getPermissionsAsync();
+		if (statusObj.status !== "granted") {
+			statusObj = await Notifications.requestPermissionsAsync();
+		}
+		if (statusObj?.status !== "granted") {
+			pushToken = null;
+		} else {
+			pushToken = (await Notifications.getExpoPushTokenAsync()).data;
+		}
+
 		const resp = await fetch(
 			`https://rnts-shop-default-rtdb.firebaseio.com/products.json?auth=${rootState.auth.data.token}`,
 			{
@@ -24,6 +36,7 @@ const createProduct = createAsyncThunk<
 					imageUrl: payload.imageUrl,
 					price: payload.price,
 					ownerId: rootState.auth.data.userID,
+					ownerPushToken: pushToken,
 				}),
 			}
 		);
@@ -40,6 +53,7 @@ const createProduct = createAsyncThunk<
 			...payload,
 			id: responseData.name,
 			ownerId: rootState.auth.data.userID,
+			ownerPushToken: pushToken,
 		});
 	} catch (e: any) {
 		return thunkAPI.rejectWithValue(e.message);

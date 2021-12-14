@@ -12,14 +12,12 @@ import {
 import Card from "../../components/UI/Card";
 import Input from "../../components/UI/Input";
 import Colors from "../../constants/Colors";
-import ERRORS from "../../constants/errors.json";
+import * as ERRORS from "../../constants/errors.json";
 import useFormReducer from "../../hooks/useFormReducer";
 import { authActions } from "../../store/authSlice";
 import { useReduxDispatch, useReduxSelector } from "../../store/store";
 
 interface IAuthScreenProps {}
-
-const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
 const AuthScreen: React.FC<IAuthScreenProps> = (props) => {
 	const dispatch = useReduxDispatch();
@@ -52,13 +50,12 @@ const AuthScreen: React.FC<IAuthScreenProps> = (props) => {
 
 	React.useEffect(() => {
 		if (error) {
-			Alert.alert(
-				// @ts-ignore
+			Alert.alert(// @ts-ignore
 				ERRORS[error]?.title
 					?.replace(/([a-z]{1})(\-)([a-z]{1})/g, "$1 $3")
 					?.replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) =>
 						letter.toUpperCase()
-					), // @ts-ignore
+					),// @ts-ignore
 				ERRORS[error]?.message
 			);
 		}

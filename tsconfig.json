@@ -4,6 +4,7 @@
     "allowSyntheticDefaultImports": true,
 		"isolatedModules": true,
 		"strict": true,
+    "resolveJsonModule": true,
 		"outDir": "./build",
   }
 }
