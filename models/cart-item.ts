@@ -19,7 +19,7 @@ export function createCartItem(
 	quantity: number,
 	productPrice: number,
 	productTitle: string,
-	pushToken: string = ""
+	pushToken: string
 ): ICartItem {
 	return {
 		quantity,

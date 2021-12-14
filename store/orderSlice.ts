@@ -57,9 +57,12 @@ const addOrder = createAsyncThunk<
 				body: JSON.stringify({
 					to: pushToken,
 					title: "Order Was Placed!",
-					body: cartItem.productTitle,
+					body: `${cartItem.productTitle} - Quantity of ${cartItem.quantity}`,
 				}),
-			});
+			})
+				.then((resp) => resp.json())
+				.then(console.log)
+				.catch((err) => console.error(err));
 		}
 
 		return thunkAPI.fulfillWithValue(

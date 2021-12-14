@@ -5,9 +5,18 @@ import { Provider } from "react-redux";
 import useCachedResources from "./hooks/useCachedResources";
 import Navigation from "./navigation";
 import store from "./store/store";
+import * as Notifications from "expo-notifications";
 import { enableScreens } from "react-native-screens";
 
-enableScreens()
+enableScreens();
+
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldShowAlert: true,
+		shouldPlaySound: true,
+		shouldSetBadge: true,
+	}),
+});
 
 export default function App() {
 	const isLoadingComplete = useCachedResources();

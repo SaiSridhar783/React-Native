@@ -26,7 +26,8 @@ const cartSlice = createSlice({
 				state.items[addedProduct.id] = createCartItem(
 					1,
 					productPrice,
-					productTitle
+					productTitle,
+					pushToken
 				);
 				state.totalAmount += productPrice;
 			}
